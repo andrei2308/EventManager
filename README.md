@@ -1,0 +1,1 @@
+Simple web application for managing event attendance.
