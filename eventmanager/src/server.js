@@ -56,7 +56,7 @@ function authenticateToken(req, res, next) {
     });
 }
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(null, {
-    swaggerOptions: { url: 'http://localhost:' + process.env.PORT + '/openapi.json' },
+    swaggerOptions: { url: 'http://localhost:10001/openapi.json' },
 }));
 
 
