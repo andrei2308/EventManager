@@ -118,6 +118,7 @@ app.get('/user', authenticateToken, async (req, res) => {
         res.status(500).json({ message: 'Server error fetching user data: ' + error.message });
     }
 });
+
 const apiDoc = {
     openapi: '3.0.0',
     info: {
@@ -150,38 +151,99 @@ const apiDoc = {
                 },
             },
         },
-    },
-};
-
-app.apiDoc = apiDoc;
-
-initialize({
-    app,
-    apiDoc,
-    app,
-    apiDoc: {
-        openapi: '3.0.0',
-        info: {
-            title: 'My API',
-            version: '1.0.0',
-            description: 'A simple API using express-openapi',
+        '/login': {
+            post: {
+                summary: 'User login',
+                description: 'Authenticate user and return a JWT token.',
+                requestBody: {
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    username: { type: 'string' },
+                                    password: { type: 'string' },
+                                },
+                                required: ['username', 'password'],
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    200: {
+                        description: 'Login successful',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        token: { type: 'string' },
+                                        message: { type: 'string' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    401: {
+                        description: 'Invalid username or password',
+                    },
+                    500: {
+                        description: 'Server error during login',
+                    },
+                },
+            },
         },
-        paths: {
-            '/hello': {
-                get: {
-                    summary: 'Get a greeting',
-                    description: 'Returns a simple greeting message.',
-                    responses: {
-                        200: {
-                            description: 'Successful response',
-                            content: {
-                                'application/json': {
-                                    schema: {
-                                        type: 'object',
-                                        properties: {
-                                            message: {
-                                                type: 'string',
-                                                example: 'Hello, world!',
+        '/register': {
+            post: {
+                summary: 'User registration',
+                description: 'Register a new user.',
+                requestBody: {
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    username: { type: 'string' },
+                                    password: { type: 'string' },
+                                    email: { type: 'string' },
+                                },
+                                required: ['username', 'password', 'email'],
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    201: {
+                        description: 'Registration successful',
+                    },
+                    400: {
+                        description: 'User already exists',
+                    },
+                    500: {
+                        description: 'Server error during registration',
+                    },
+                },
+            },
+        },
+        '/user': {
+            get: {
+                summary: 'Get user info',
+                description: 'Retrieve information about the authenticated user.',
+                responses: {
+                    200: {
+                        description: 'User info',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        message: { type: 'string' },
+                                        user: {
+                                            type: 'object',
+                                            properties: {
+                                                _id: { type: 'string' },
+                                                username: { type: 'string' },
+                                                email: { type: 'string' },
                                             },
                                         },
                                     },
@@ -189,13 +251,22 @@ initialize({
                             },
                         },
                     },
+                    401: {
+                        description: 'Access token missing or invalid',
+                    },
+                    404: {
+                        description: 'User not found',
+                    },
+                    500: {
+                        description: 'Server error fetching user data',
+                    },
                 },
             },
         },
     },
-    paths: path.resolve(__dirname, './api-routes'),
-});
+};
 
+app.apiDoc = apiDoc;
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
