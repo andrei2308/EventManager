@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { redirect, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function UserPage() {
     const [userData, setUserData] = useState(null);
@@ -38,12 +39,20 @@ function UserPage() {
         localStorage.removeItem('token')
         navigate("/")
     }
+    const handleViewEvents = () => {
+        navigate("/events")
+    }
+    const handleCreateEvent = () => {
+        navigate("/events/create")
+    }
     return (
         <div>
             <h2>Welcome, {userData.username}!</h2>
             <p>Email: {userData.email}</p>
             <p>User ID: {userData._id}</p>
             <button onClick={handleLogout}>Logout</button>
+            <button onClick={handleViewEvents}>View Events</button>
+            <button onClick={handleCreateEvent}>Create Event</button>
         </div>
     );
 }

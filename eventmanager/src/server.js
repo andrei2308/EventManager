@@ -11,7 +11,7 @@ const path = require('path');
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('./model/UserModel.js');
+const User = require('./Schemas/UserSchema.js');
 
 const app = express()
 app.use(cors());
@@ -42,6 +42,7 @@ mongodb.connect(process.env.MONGO_URI, {
     });
 // Middleware to authenticate JWT
 function authenticateToken(req, res, next) {
+    console.log('Authenticating token...');
     const token = req.headers['authorization']?.split(' ')[1]; // Extract token from Authorization header
     if (!token) {
         return res.status(401).json({ message: 'Access token missing' });
@@ -96,7 +97,7 @@ app.post('/register', async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ username, password: hashedPassword, email });
+        const newUser = new User({ username, password: hashedPassword, email, role: "participant", organizedEvents: [], participatedEvents: [] });
         await newUser.save();
 
         res.status(201).json({ message: 'Registration successful!' });
@@ -118,7 +119,27 @@ app.get('/user', authenticateToken, async (req, res) => {
         res.status(500).json({ message: 'Server error fetching user data: ' + error.message });
     }
 });
+app.get('/events', authenticateToken, (req, res) => {
+    console.log('Route /events hit by user:', req.user);
 
+    const events = [
+        { id: 1, name: 'Event 1', date: '2024-12-01' },
+        { id: 2, name: 'Event 2', date: '2024-12-05' },
+    ]; //mock data
+
+    res.status(200).json({ events });
+});
+app.get('/events/create', authenticateToken, (req, res) => {
+    console.log('Route /events/create hit by user:', req.user);
+
+    res.status(200).json({ message: 'Create event' });
+});
+app.post('/events', authenticateToken, (req, res) => {
+    console.log('Route /events hit by user:', req.user);
+    console.log('Event data:', req.body);
+
+    res.status(201).json({ message: 'Event created' });
+});
 const apiDoc = {
     openapi: '3.0.0',
     info: {
