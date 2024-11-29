@@ -1,19 +1,31 @@
+/**
+ * @file server.js
+ * @description This file contains the server setup and API endpoints for the Event Manager application.
+ * It uses Express for routing, Mongoose for MongoDB connection, and various middlewares for security and parsing.
+ * It also includes JWT authentication and Swagger documentation setup.
+ */
+
 require('dotenv').config();
 const mongodb = require('mongoose');
 const express = require('express');
 const cors = require('cors');
 const bodyparser = require("body-parser")
 const helmet = require('helmet')
-
 const swaggerUi = require('swagger-ui-express');
 const { initialize } = require('express-openapi');
 const path = require('path');
-
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('./Schemas/UserSchema.js');
 
-const app = express()
+/**
+ * @constant {Object} app - Express application instance.
+ */
+const app = express();
+
+/**
+ * Middleware setup.
+ */
 app.use(cors());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
@@ -28,8 +40,11 @@ app.use(helmet({
         }
     },
     dnsPrefetchControl: false
-}))
-// Connect to MongoDB
+}));
+
+/**
+ * Connect to MongoDB.
+ */
 mongodb.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -40,7 +55,14 @@ mongodb.connect(process.env.MONGO_URI, {
     .catch((err) => {
         console.error('Error connecting to MongoDB: ' + err);
     });
-// Middleware to authenticate JWT
+
+/**
+ * Middleware to authenticate JWT.
+ * @function authenticateToken
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
+ */
 function authenticateToken(req, res, next) {
     console.log('Authenticating token...');
     const token = req.headers['authorization']?.split(' ')[1]; // Extract token from Authorization header
@@ -56,15 +78,36 @@ function authenticateToken(req, res, next) {
         next();
     });
 }
+
+/**
+ * Swagger UI setup.
+ */
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(null, {
     swaggerOptions: { url: 'http://localhost:10001/openapi.json' },
 }));
 
-
+/**
+ * Endpoint to serve OpenAPI documentation.
+ * @name GET/openapi.json
+ * @function
+ * @memberof module:server
+ * @inner
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ */
 app.get('/openapi.json', (req, res) => {
     res.json(app.apiDoc);
 });
 
+/**
+ * User login endpoint.
+ * @name POST/login
+ * @function
+ * @memberof module:server
+ * @inner
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ */
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
@@ -87,6 +130,16 @@ app.post('/login', async (req, res) => {
         res.status(500).json({ message: 'Server error during login: ' + error.message });
     }
 });
+
+/**
+ * User registration endpoint.
+ * @name POST/register
+ * @function
+ * @memberof module:server
+ * @inner
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ */
 app.post('/register', async (req, res) => {
     const { username, password, email } = req.body;
 
@@ -106,6 +159,16 @@ app.post('/register', async (req, res) => {
         res.status(500).json({ message: 'Server error during registration: ' + error.message });
     }
 });
+
+/**
+ * Get user info endpoint.
+ * @name GET/user
+ * @function
+ * @memberof module:server
+ * @inner
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ */
 app.get('/user', authenticateToken, async (req, res) => {
     console.log('User route hit');
     console.log('Decoded user from token:', req.user);
@@ -119,6 +182,16 @@ app.get('/user', authenticateToken, async (req, res) => {
         res.status(500).json({ message: 'Server error fetching user data: ' + error.message });
     }
 });
+
+/**
+ * Get events endpoint.
+ * @name GET/events
+ * @function
+ * @memberof module:server
+ * @inner
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ */
 app.get('/events', authenticateToken, (req, res) => {
     console.log('Route /events hit by user:', req.user);
 
@@ -129,17 +202,42 @@ app.get('/events', authenticateToken, (req, res) => {
 
     res.status(200).json({ events });
 });
+
+/**
+ * Create event form endpoint.
+ * @name GET/events/create
+ * @function
+ * @memberof module:server
+ * @inner
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ */
 app.get('/events/create', authenticateToken, (req, res) => {
     console.log('Route /events/create hit by user:', req.user);
 
     res.status(200).json({ message: 'Create event' });
 });
+
+/**
+ * Create event endpoint.
+ * @name POST/events
+ * @function
+ * @memberof module:server
+ * @inner
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ */
 app.post('/events', authenticateToken, (req, res) => {
     console.log('Route /events hit by user:', req.user);
     console.log('Event data:', req.body);
 
     res.status(201).json({ message: 'Event created' });
 });
+
+/**
+ * OpenAPI documentation.
+ * @constant {Object} apiDoc - OpenAPI documentation object.
+ */
 const apiDoc = {
     openapi: '3.0.0',
     info: {
@@ -284,11 +382,99 @@ const apiDoc = {
                 },
             },
         },
+        '/events': {
+            get: {
+                summary: 'Get events',
+                description: 'Retrieve a list of events.',
+                responses: {
+                    200: {
+                        description: 'List of events',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        events: {
+                                            type: 'array',
+                                            items: {
+                                                type: 'object',
+                                                properties: {
+                                                    id: { type: 'integer' },
+                                                    name: { type: 'string' },
+                                                    date: { type: 'string' },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    401: {
+                        description: 'Access token missing or invalid',
+                    },
+                },
+            },
+            post: {
+                summary: 'Create event',
+                description: 'Create a new event.',
+                requestBody: {
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    name: { type: 'string' },
+                                    date: { type: 'string' },
+                                },
+                                required: ['name', 'date'],
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    201: {
+                        description: 'Event created',
+                    },
+                    401: {
+                        description: 'Access token missing or invalid',
+                    },
+                },
+            },
+        },
+        '/events/create': {
+            get: {
+                summary: 'Create event form',
+                description: 'Retrieve the form for creating a new event.',
+                responses: {
+                    200: {
+                        description: 'Create event form',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        message: { type: 'string' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    401: {
+                        description: 'Access token missing or invalid',
+                    },
+                },
+            },
+        },
     },
 };
 
 app.apiDoc = apiDoc;
 
+/**
+ * Start the server.
+ * @constant {number} port - The port on which the server will listen.
+ */
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.log(`Server started on port ${port}, waiting for requests. . .`);
