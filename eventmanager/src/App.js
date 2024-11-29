@@ -3,7 +3,8 @@ import './App.css';
 import axios from 'axios';
 import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import UserPage from './components/UserPage.js';  // Import UserPage component
-
+import { Events } from './components/Events.js';
+import { EventsCreate } from './components/EventsCreate.js';
 function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -28,7 +29,7 @@ function App() {
       await sleep(2000);
 
       // Redirect to /api/user after successful login
-      navigate('/api/user');
+      navigate('/user');
 
     } catch (error) {
       setMessage('Login failed. ' + (error.response?.data.message || error.message));
@@ -89,7 +90,9 @@ function AppRoutes() {
     <Router>
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/api/user" element={<UserPage />} />
+        <Route path="/user" element={<UserPage />} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/events/create" element={<EventsCreate />} />
       </Routes>
     </Router>
   );
