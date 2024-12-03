@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../axiosConfiguration';
 import { redirect, useNavigate } from 'react-router-dom';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
@@ -17,11 +17,7 @@ function UserPage() {
             return;
         }
 
-        axios.get(`http://localhost:10001/user`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+        axiosInstance.get(`http://localhost:10001/user`)
             .then(response => {
                 setUserData(response.data.user);
             })

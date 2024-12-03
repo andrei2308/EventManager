@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-
+import axiosInstance from '../axiosConfiguration';
 export function EventsCreate() {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -25,12 +24,7 @@ export function EventsCreate() {
                 access_code: accessCode,
                 group,
             };
-            const response = await axios.post('http://localhost:10001/events', eventData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-            });
+            const response = await axiosInstance.post('http://localhost:10001/events', eventData);
 
             setMessage(`Event created successfully: ${response.data.message}`);
         } catch (err) {
