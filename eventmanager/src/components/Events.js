@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../axiosConfiguration';
 
 export function Events() {
     const [events, setEvents] = useState([]);
@@ -12,11 +12,7 @@ export function Events() {
             return;
         }
 
-        axios.get('http://localhost:10001/events', {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        })
+        axiosInstance.get('http://localhost:10001/events')
             .then((response) => {
                 setEvents(response.data.events || []);
             })
