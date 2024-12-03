@@ -1,0 +1,155 @@
+openapi: 3.0.0
+info:
+  title: Event Manager API
+  version: 1.0.0
+  description: API for managing events and users in the Event Manager application.
+paths:
+  /login:
+    post:
+      summary: User login
+      description: Authenticate user and return a JWT token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: Login successful
+        '401':
+          description: Invalid username or password
+  /register:
+    post:
+      summary: User registration
+      description: Register a new user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                email:
+                  type: string
+              required:
+                - username
+                - password
+                - email
+      responses:
+        '201':
+          description: Registration successful
+        '400':
+          description: User already exists
+        '500':
+          description: Server error during registration
+  /user:
+    get:
+      summary: Get user info
+      description: Retrieve information about the authenticated user.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User info retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User info
+                  user:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: 1234567890abcdef
+                      username:
+                        type: string
+                        example: john_doe
+                      email:
+                        type: string
+                        example: john.doe@example.com
+        '401':
+          description: Access token missing or invalid
+        '404':
+          description: User not found
+        '500':
+          description: Server error fetching user data
+
+  /events:
+    get:
+      summary: Get events
+      description: Retrieve a list of events.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of events retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  events:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        name:
+                          type: string
+                          example: Event 1
+                        date:
+                          type: string
+                          format: date
+                          example: 2024-12-01
+        '401':
+          description: Access token missing or invalid
+
+    post:
+      summary: Create event
+      description: Create a new event.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Event 1
+                date:
+                  type: string
+                  format: date
+                  example: 2024-12-01
+      responses:
+        '201':
+          description: Event created successfully
+        '401':
+          description: Access token missing or invalid
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
