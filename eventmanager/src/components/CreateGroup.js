@@ -1,20 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import axiosInstance from '../axiosConfiguration';
-export function EventsCreate() {
+import { useState, useEffect } from "react";
+import axiosInstance from "../axiosConfiguration";
+import { useNavigate } from "react-router-dom";
+
+export function CreateGroup() {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const [startTime, setStartTime] = useState('');
-    const [endTime, setEndTime] = useState('');
     const [group, setGroup] = useState('');
     const [message, setMessage] = useState('');
-    const generateAccessCode = () => {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let code = '';
-        for (let i = 0; i < 8; i++) { // Generate an 8-character random string
-            code += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return code;
-    };
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -23,15 +15,12 @@ export function EventsCreate() {
                 setMessage('No token found. Please log in.');
                 return;
             }
-            const eventData = {
+            const groupData = {
                 name,
                 description,
-                start_time: startTime,
-                end_time: endTime,
-                access_code: generateAccessCode(),
-                group: group || null
+                group
             };
-            const response = await axiosInstance.post('http://localhost:10001/events', eventData);
+            const response = await axiosInstance.post('http://localhost:10001/group', groupData);
 
             setMessage(`Event created successfully: ${response.data.message}`);
         } catch (err) {
@@ -55,26 +44,12 @@ export function EventsCreate() {
                     onChange={(e) => setDescription(e.target.value)}
                 />
                 <input
-                    type="datetime-local"
-                    placeholder="Start Time"
-                    value={startTime}
-                    onChange={(e) => setStartTime(e.target.value)}
-                    required
-                />
-                <input
-                    type="datetime-local"
-                    placeholder="End Time"
-                    value={endTime}
-                    onChange={(e) => setEndTime(e.target.value)}
-                    required
-                />
-                <input
                     type="text"
-                    placeholder="Group ID (optional)"
+                    placeholder="Group ID"
                     value={group}
                     onChange={(e) => setGroup(e.target.value)}
                 />
-                <button type="submit">Create Event</button>
+                <button type="submit">Create group</button>
             </form>
             {message && <p>{message}</p>}
         </div>

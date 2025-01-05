@@ -5,6 +5,11 @@ import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-route
 import UserPage from './components/UserPage.js';  // Import UserPage component
 import { Events } from './components/Events.js';
 import { EventsCreate } from './components/EventsCreate.js';
+import { EventsDetails } from './components/EventsDetails.js';
+import { EventParticipants } from './components/EventParticipants.js';
+import { CreateGroup } from './components/CreateGroup.js';
+import { GroupsView } from './components/GroupsView.js';
+import { EventsByGroup } from './components/EventsByGroup.js';
 function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -23,7 +28,7 @@ function App() {
 
       // Store the token in localStorage
       localStorage.setItem('token', response.data.token);
-
+      localStorage.setItem('user', JSON.stringify(response.data.user));
       await sleep(1500);
       setMessage('Logging in...');
       await sleep(2000);
@@ -93,6 +98,11 @@ function AppRoutes() {
         <Route path="/user" element={<UserPage />} />
         <Route path="/events" element={<Events />} />
         <Route path="/events/create" element={<EventsCreate />} />
+        <Route path="/events/details/:eventId" element={<EventsDetails />} />
+        <Route path="events/:eventId/participants" element={<EventParticipants />} />
+        <Route path="/groups" element={<CreateGroup />} />
+        <Route path="/groups/view" element={<GroupsView />} />
+        <Route path="/groups/details/:groupId" element={<EventsByGroup />} />
       </Routes>
     </Router>
   );

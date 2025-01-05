@@ -1,25 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import axiosInstance from '../axiosConfiguration';
-import { useNavigate } from 'react-router-dom';
-export function Events() {
+import { useState, useEffect } from "react";
+import axiosInstance from "../axiosConfiguration";
+import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+
+export function EventsByGroup() {
     const [events, setEvents] = useState([]);
     const [error, setError] = useState('');
-    const [event, setEvent] = useState(null);
     const navigate = useNavigate();
+    const { groupId } = useParams();
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            setError('No token found, please log in.');
-            return;
-        }
+        const fetchEvents = async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                setError('No token found, please log in.');
+                return;
+            }
 
-        axiosInstance.get('http://localhost:10001/events')
-            .then((response) => {
-                setEvents(response.data.events || []);
-            })
-            .catch((err) => {
-                setError('Failed to fetch events: ' + (err.response?.data.message || err.message));
-            });
+            try {
+                const response = await axiosInstance.get(`http://localhost:10001/groups/details/${groupId}`);
+                setEvents(response.data.events);
+            } catch (err) {
+                console.error(err);
+                setError('Error fetching events. Please try again.');
+            }
+        };
+
+        fetchEvents();
     }, []);
 
     if (error) {

@@ -1,0 +1,118 @@
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import axiosInstance from '../axiosConfiguration';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+export function EventsDetails() {
+    const { eventId } = useParams();
+    const [event, setEvent] = useState(null);
+    const [error, setError] = useState('');
+    const redirect = useNavigate();
+    const user = JSON.parse(localStorage.getItem('user'));
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setError('No token found, please log in.');
+            return;
+        }
+        axiosInstance.get(`http://localhost:10001/events/${eventId}`)
+            .then((response) => {
+                setEvent(response.data.event);
+            })
+            .catch((err) => {
+                setError('Failed to fetch event details: ' + (err.response?.data.message || err.message));
+            });
+    }, [eventId]);
+    const handleClick = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                setError('No token found, please log in.');
+                return;
+            }
+            const response = await axiosInstance.post(`http://localhost:10001/events/${eventId}/join`);
+            alert(response.data.message);
+        } catch (err) {
+            setError('Failed to join event: ' + (err.response?.data.message || err.message));
+        }
+    };
+    const handleClickEdit = () => {
+        alert('Edit event clicked');
+    };
+    const handleClickSeeParticipants = () => {
+        redirect(`/events/${eventId}/participants`);
+    };
+    const handleDeleteEvent = () => {
+        // are you sure?
+        axiosInstance.delete(`http://localhost:10001/events/${eventId}`)
+            .then(() => {
+                alert('Event deleted');
+                redirect('/events');
+            })
+            .catch((err) => {
+                setError('Failed to delete event: ' + (err.response?.data.message || err.message));
+            });
+    }
+    const [enteredCode, setEnteredCode] = useState('');
+
+    const handleJoinEvent = async () => {
+        if (enteredCode === event.access_code) {
+            if (event.status === 'OPEN') {
+                setError('Event is already open.');
+                return;
+            }
+            if (event.participants.includes(user._id)) {
+                setError('You are already a participant.');
+                return;
+            }
+            try {
+                // Logic to join event (e.g., API call)
+                console.log('Successfully joined event!');
+                await axiosInstance.post(`/events/${eventId}/join`);
+                redirect('/events');
+            } catch (err) {
+                console.error('Error joining event:', err);
+                setError('Failed to join the event.');
+            }
+        } else {
+            setError('Invalid access code.');
+        }
+    };
+    return (
+        <div>
+            <h2>Event Details</h2>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {event && (
+                <div>
+                    <p>Name: {event.name}</p>
+                    <p>Description: {event.description}</p>
+                    <p>Start time: {new Date(event.start_time).toLocaleString()}</p>
+                    <p>End time: {new Date(event.end_time).toLocaleString()}</p>
+                    <p>Access code: {user.role === 'organizer' ? event.access_code : 'Hidden'}</p>
+
+                    {/* Participant: Enter Access Code */}
+                    {user.role === 'participant' && (
+                        <div>
+                            <input
+                                type="text"
+                                placeholder="Enter access code"
+                                value={enteredCode}
+                                onChange={(e) => setEnteredCode(e.target.value)}
+                            />
+                            <button onClick={handleJoinEvent}>Join Event</button>
+                        </div>
+                    )}
+
+                    {/* Organizer: Edit Event */}
+                    {user.role === 'organizer' && (
+                        <>
+                            <button onClick={handleClickEdit}>Edit Event</button>
+                            <button onClick={handleClickSeeParticipants}>See Participants</button>
+                            <button onClick={handleDeleteEvent}>Delete Event</button>
+                        </>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+}

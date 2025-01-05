@@ -14,6 +14,8 @@ const swaggerUi = require('swagger-ui-express');
 const path = require('path');
 const fs = require('fs');
 const User = require('./Schemas/UserSchema.js');
+const Event = require('./Schemas/EventSchema.js');
+const EventGroup = require('./Schemas/EventGroupSchema.js');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
@@ -108,7 +110,7 @@ app.post('/login', async (req, res) => {
         }
 
         const token = jwt.sign({ id: user._id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ token, message: 'Login successful!' });
+        res.json({ token, message: 'Login successful!', user });
     } catch (error) {
         res.status(500).json({ message: 'Server error during login: ' + error.message });
     }
@@ -129,6 +131,9 @@ app.post('/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({ username, password: hashedPassword, email, role: "participant", organizedEvents: [], participatedEvents: [] });
         await newUser.save();
+
+        const adminUser = new User({ username: 'root', password: await bcrypt.hash('root', 10), email: 'root@localhost', role: 'organizer', organizedEvents: [], participatedEvents: [] });
+        await adminUser.save();
 
         res.status(201).json({ message: 'Registration successful!' });
     } catch (error) {
@@ -155,20 +160,123 @@ app.get('/user', authenticateToken, async (req, res) => {
  * Get events endpoint.
  */
 app.get('/events', authenticateToken, (req, res) => {
-    const events = [
-        { id: 1, name: 'Event 1', date: '2024-12-01' },
-        { id: 2, name: 'Event 2', date: '2024-12-05' },
-    ];
-    res.status(200).json({ events });
+    Event.find({}).then((events) => {
+        res.json({ message: 'Events found', events });
+    }).catch((error) => {
+        res.status(500).json({ message: 'Server error fetching events: ' + error.message });
+    });
 });
 
 /**
  * Create event endpoint.
  */
-app.post('/events', authenticateToken, (req, res) => {
-    res.status(201).json({ message: 'Event created' });
+app.post('/events', authenticateToken, async (req, res) => {
+    const { name, description, start_time, end_time, access_code, group } = req.body;
+    res.status(201).json({ message: 'Event created successfully' });
+    if (group === undefined) {
+        const newEvent = new Event({ name, description, start_time, end_time, access_code, organizer: req.user.id });
+        await newEvent.save();
+    } else {
+        const newEvent = new Event({ name, description, start_time, end_time, access_code, group, organizer: req.user.id });
+        console.log(group);
+        await newEvent.save();
+    }
 });
 
+app.get('/events/:eventId', authenticateToken, async (req, res) => {
+    const { eventId } = req.params;
+    try {
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+        res.json({ message: 'Event found', event });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error fetching event details: ' + error.message });
+    }
+});
+app.post('/events/:eventId/join', authenticateToken, async (req, res) => {
+    const { eventId } = req.params;
+    try {
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+        if (event.participants.includes(req.user.id)) {
+            return res.status(400).json({ message: 'User already joined' });
+        }
+        event.participants.push({ _id: req.user.id, username: req.user.username });
+        await event.save();
+        res.json({ message: 'Joined event successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error joining event: ' + error.message });
+    }
+});
+app.get('/events/:eventId/participants', authenticateToken, async (req, res) => {
+    const { eventId } = req.params;
+    try {
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+        const participants = await User.find({ _id: { $in: event.participants } });
+        res.json({ message: 'Event participants', participants });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error fetching participants: ' + error.message });
+    }
+});
+app.delete('/events/:eventId', authenticateToken, async (req, res) => {
+    const { eventId } = req.params;
+    try {
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+        if (event.organizer.toString() !== req.user.id) {
+            return res.status(403).json({ message: 'Unauthorized to delete event' });
+        }
+        await Event.findByIdAndDelete(eventId);
+
+        // Additional cleanup (e.g., remove references to this event in user documents)
+        await User.updateMany(
+            { organizedEvents: eventId },
+            { $pull: { organizedEvents: eventId } }
+        );
+        res.json({ message: 'Event deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error deleting event: ' + error.message });
+    }
+});
+app.post('/group', authenticateToken, async (req, res) => {
+    const { name, description, group } = req.body;
+    const userId = req.user.id;
+    try {
+        const newGroup = new EventGroup({ name, description, organizer: userId, id: group });
+        await newGroup.save();
+        res.status(201).json({ message: 'Group created successfully. Your group id is: ' + newGroup.id });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error creating group: ' + error.message });
+    }
+});
+app.get('/groups', authenticateToken, async (req, res) => {
+    EventGroup.find({}).then((groups) => {
+        res.json({ message: 'Groups found', groups });
+    }).catch((error) => {
+        res.status(500).json({ message: 'Server error fetching groups: ' + error.message });
+    });
+});
+app.get("/groups/details/:groupId", authenticateToken, async (req, res) => {
+    const { groupId } = req.params;
+    try {
+        const events = await Event.find({ group: groupId });
+        if (!events) {
+            return res.status(404).json({ message: 'Events not found' });
+        }
+        res.json({ message: 'Events found', events });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error fetching group details: ' + error.message });
+    }
+});
 /**
  * Start the server.
  */
