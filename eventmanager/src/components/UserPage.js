@@ -47,6 +47,12 @@ function UserPage() {
     const handleViewGroups = () => {
         navigate("/groups/view")
     }
+    const handleViewMyEvents = () => {
+        navigate(`/events/${userData._id}`)
+    }
+    const handleViewMyGroups = () => {
+        navigate(`/groups/${userData._id}`)
+    }
     return (
         <div>
             <h2>Welcome, {userData.username}!</h2>
@@ -58,7 +64,11 @@ function UserPage() {
                 <button onClick={handleCreateEvent}>Create Event</button>
             )}
             {userData.role === "organizer" && (
-                <button onClick={handleCreateGroup}>Create group of events</button>
+                <div>
+                    <button onClick={handleCreateGroup}>Create group of events</button>
+                    <button onClick={handleViewMyEvents}>My events</button>
+                    <button onClick={handleViewMyGroups}>My groups</button>
+                </div>
             )}
             <button onClick={handleViewGroups}>View groups</button>
         </div>

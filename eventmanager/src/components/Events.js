@@ -12,8 +12,8 @@ export function Events() {
             setError('No token found, please log in.');
             return;
         }
-
-        axiosInstance.get('http://localhost:10001/events')
+        const user = JSON.parse(localStorage.getItem('user'));
+        axiosInstance.get('http://localhost:10001/events', user._id)
             .then((response) => {
                 setEvents(response.data.events || []);
             })

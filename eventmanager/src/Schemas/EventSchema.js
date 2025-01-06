@@ -35,9 +35,15 @@ const eventSchema = mongoose.Schema({
         required: true
     },
     participants: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        default: []
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true
+        },
+        joinedAt: {
+            type: Date,
+            default: Date.now
+        }
     }]
 }, { timestamps: true });
 

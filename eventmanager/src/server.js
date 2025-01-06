@@ -18,7 +18,7 @@ const Event = require('./Schemas/EventSchema.js');
 const EventGroup = require('./Schemas/EventGroupSchema.js');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-
+require('./Jobs/cronJobs.js');
 /**
  * @constant {Object} app - Express application instance.
  */
@@ -160,12 +160,18 @@ app.get('/user', authenticateToken, async (req, res) => {
  * Get events endpoint.
  */
 app.get('/events', authenticateToken, (req, res) => {
-    Event.find({}).then((events) => {
-        res.json({ message: 'Events found', events });
-    }).catch((error) => {
-        res.status(500).json({ message: 'Server error fetching events: ' + error.message });
-    });
+    const userId = req.user.id;
+
+    // Find events where the organizer is NOT the current user
+    Event.find({ organizer: { $ne: userId } })
+        .then((events) => {
+            res.json({ message: 'Events found', events });
+        })
+        .catch((error) => {
+            res.status(500).json({ message: 'Server error fetching events: ' + error.message });
+        });
 });
+
 
 /**
  * Create event endpoint.
@@ -197,21 +203,38 @@ app.get('/events/:eventId', authenticateToken, async (req, res) => {
 });
 app.post('/events/:eventId/join', authenticateToken, async (req, res) => {
     const { eventId } = req.params;
+
     try {
         const event = await Event.findById(eventId);
         if (!event) {
             return res.status(404).json({ message: 'Event not found' });
         }
-        if (event.participants.includes(req.user.id)) {
+
+        // Check if the user is already a participant
+        const isAlreadyJoined = event.participants.some(participant =>
+            participant.userId.toString() === req.user.id
+        );
+        if (isAlreadyJoined) {
             return res.status(400).json({ message: 'User already joined' });
         }
-        event.participants.push({ _id: req.user.id, username: req.user.username });
+
+        // Add the user to the participants array
+        event.participants.push({
+            userId: req.user.id,
+            joinedAt: new Date() // Set the current time as the join time
+        });
+
         await event.save();
-        res.json({ message: 'Joined event successfully' });
+
+        res.json({
+            message: 'Joined event successfully',
+            joinedAt: new Date() // Return the join time to the user
+        });
     } catch (error) {
         res.status(500).json({ message: 'Server error joining event: ' + error.message });
     }
 });
+
 app.get('/events/:eventId/participants', authenticateToken, async (req, res) => {
     const { eventId } = req.params;
     try {
@@ -219,12 +242,33 @@ app.get('/events/:eventId/participants', authenticateToken, async (req, res) => 
         if (!event) {
             return res.status(404).json({ message: 'Event not found' });
         }
-        const participants = await User.find({ _id: { $in: event.participants } });
+
+        // Extract userIds and joinedAt timestamps
+        const participantsData = event.participants.map(participant => ({
+            userId: participant.userId,
+            joinedAt: participant.joinedAt
+        }));
+
+        // Fetch user details from the User collection
+        const userIds = participantsData.map(p => p.userId); // Extract userIds
+        const users = await User.find({ _id: { $in: userIds } }, 'username email'); // Fetch only necessary fields
+
+        // Combine user details with their joinedAt timestamps
+        const participants = users.map(user => {
+            const joinedAt = participantsData.find(p => p.userId.toString() === user._id.toString()).joinedAt;
+            return {
+                username: user.username,
+                email: user.email,
+                joinedAt
+            };
+        });
+
         res.json({ message: 'Event participants', participants });
     } catch (error) {
         res.status(500).json({ message: 'Server error fetching participants: ' + error.message });
     }
 });
+
 app.delete('/events/:eventId', authenticateToken, async (req, res) => {
     const { eventId } = req.params;
     try {
@@ -275,6 +319,79 @@ app.get("/groups/details/:groupId", authenticateToken, async (req, res) => {
         res.json({ message: 'Events found', events });
     } catch (error) {
         res.status(500).json({ message: 'Server error fetching group details: ' + error.message });
+    }
+});
+app.get('/groups/admin/:userId', authenticateToken, async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const groups = await EventGroup.find({ organizer: userId });
+        res.json({ message: 'Groups found', groups });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error fetching user groups: ' + error.message });
+    }
+});
+app.get('/events/admin/:userId', authenticateToken, async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const user = await User.findById(userId);
+        console.log(user);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const events = await Event.find({ organizer: userId });
+        console.log(events);
+        res.json({ message: 'Events found', events });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error fetching user events: ' + error.message });
+    }
+}
+);
+app.get('/events/details/admin/:eventId', authenticateToken, async (req, res) => {
+    const { eventId } = req.params;
+    console.log(eventId);
+    try {
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+        res.json({ message: 'Event found', event });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error fetching event details: ' + error.message });
+    }
+});
+app.get('/events/admin/groups/:groupId', authenticateToken, async (req, res) => {
+    const { groupId } = req.params;
+    try {
+        const events = await Event.find({ group: groupId });
+        if (!events) {
+            return res.status(404).json({ message: 'Events not found' });
+        }
+        res.json({ message: 'Events found', events });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error fetching group events: ' + error.message });
+    }
+});
+app.get('/groups/admin/export/participants/:userId', authenticateToken, async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const groups = await EventGroup.find({ organizer: userId });
+        const groupIds = groups.map(group => group.id);
+        const events = await Event.find({ group: { $in: groupIds } });
+        const participants = events.map(event => event.participants).flat();
+        const users = await User.find({ _id: { $in: participants.map(p => p.userId) } }, 'username email');
+        console.log(users);
+        console.log("participants", participants);
+        res.json({ message: 'Participants found', users });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error fetching participants: ' + error.message });
     }
 });
 /**

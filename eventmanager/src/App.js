@@ -10,6 +10,10 @@ import { EventParticipants } from './components/EventParticipants.js';
 import { CreateGroup } from './components/CreateGroup.js';
 import { GroupsView } from './components/GroupsView.js';
 import { EventsByGroup } from './components/EventsByGroup.js';
+import { AdminEvents } from './components/AdminEvents.js';
+import { AdminEventsDetails } from './components/AdminEventDetails.js';
+import { AdminGroups } from './components/AdminGroups.js';
+import { AdminEventsFromGroup } from './components/AdminEventsFromGroup.js';
 function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -103,6 +107,10 @@ function AppRoutes() {
         <Route path="/groups" element={<CreateGroup />} />
         <Route path="/groups/view" element={<GroupsView />} />
         <Route path="/groups/details/:groupId" element={<EventsByGroup />} />
+        <Route path="/events/:userId" element={<AdminEvents />} />
+        <Route path="/events/details/admin/:eventId" element={<AdminEventsDetails />} />
+        <Route path="/groups/:userId" element={<AdminGroups />} />
+        <Route path="/groups/details/admin/:groupId" element={<AdminEventsFromGroup />} />
       </Routes>
     </Router>
   );

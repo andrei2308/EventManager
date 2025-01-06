@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../axiosConfiguration';
+import { QRCodeCanvas } from 'qrcode.react'; // Correctly import QRCodeCanvas
+
 export function EventsCreate() {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
     const [group, setGroup] = useState('');
+    const [accessCode, setAccessCode] = useState(''); // Store the generated access code
+    const [qrCode, setQrCode] = useState(''); // Store the QR code
     const [message, setMessage] = useState('');
+
+    // Function to generate the random access code
     const generateAccessCode = () => {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         let code = '';
@@ -15,6 +21,8 @@ export function EventsCreate() {
         }
         return code;
     };
+
+    // Handle the form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -23,21 +31,32 @@ export function EventsCreate() {
                 setMessage('No token found. Please log in.');
                 return;
             }
+
+            // Generate access code
+            const generatedAccessCode = generateAccessCode();
+            setAccessCode(generatedAccessCode); // Store the generated access code
+
             const eventData = {
                 name,
                 description,
                 start_time: startTime,
                 end_time: endTime,
-                access_code: generateAccessCode(),
+                access_code: generatedAccessCode,
                 group: group || null
             };
+
+            // Send the event data to the backend
             const response = await axiosInstance.post('http://localhost:10001/events', eventData);
 
             setMessage(`Event created successfully: ${response.data.message}`);
+
+            // Generate QR code for the access code
+            setQrCode(generatedAccessCode); // Store the access code for QR code generation
         } catch (err) {
             setMessage(`Error creating event: ${err.response?.data.message || err.message}`);
         }
     };
+
     return (
         <div>
             <h2>Create Event</h2>
@@ -76,7 +95,16 @@ export function EventsCreate() {
                 />
                 <button type="submit">Create Event</button>
             </form>
+
             {message && <p>{message}</p>}
+
+            {qrCode && (
+                <div>
+                    <h3>Access Code QR Code</h3>
+                    <p>Access Code: {accessCode}</p>
+                    <QRCodeCanvas value={qrCode} size={256} />
+                </div>
+            )}
         </div>
     );
 }

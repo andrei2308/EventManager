@@ -1,26 +1,26 @@
-import { useState, useEffect } from 'react';
-import axiosInstance from '../axiosConfiguration';
-import { useNavigate } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
-export function EventParticipants() {
-    const [participants, setParticipants] = useState([]);
-    const [error, setError] = useState('');
+import { useState, useEffect } from "react";
+import axiosInstance from "../axiosConfiguration";
+import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+
+export function AdminGroups() {
+    const [group, setGroup] = useState(null);
+    const [groups, setGroups] = useState([]);
+    const [error, setError] = useState("");
     const navigate = useNavigate();
-    const { eventId } = useParams();
-    const userId = JSON.parse(localStorage.getItem('user'))._id;
+    const { userId } = useParams();
     useEffect(() => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem("token");
         if (!token) {
-            setError('No token found, please log in.');
+            setError("No token found, please log in.");
             return;
         }
-        axiosInstance.get(`/events/${eventId}/participants`)
+        axiosInstance.get(`http://localhost:10001/groups/admin/${userId}`)
             .then((response) => {
-                setParticipants(response.data.participants || []);
-                console.log(response.data.participants);
+                setGroups(response.data.groups || []);
             })
             .catch((err) => {
-                setError('Failed to fetch participants: ' + (err.response?.data.message || err.message));
+                setError("Failed to fetch groups: " + (err.response?.data.message || err.message));
             });
     }, []);
     if (error) {
@@ -103,25 +103,29 @@ export function EventParticipants() {
                 setError("Failed to fetch participants: " + (err.response?.data.message || err.message));
             });
     };
+
+
     return (
         <div>
-            <h2>Participants</h2>
-            {participants.length > 0 ? (
-                <div>
-                    <ul>
-                        {participants.map((participant) => (
-                            <li key={participant._id}>
-                                User {participant.username} joined at {participant.joinedAt}
-                            </li>
-                        ))}
+            <h2>Groups</h2>
+            {groups.length > 0 ? (
+                <ul>
+                    {groups.map((group) => (
+                        <li
+                            key={group._id}
+                            onClick={() => navigate(`/groups/details/admin/${group.id}`)} // Add click handler
+                            style={{ cursor: "pointer", color: "blue", textDecoration: "underline" }} // Optional styles
+                        >
+                            {group.name}
+                        </li>
+                    ))}
+                </ul>
 
-                    </ul>
-                    <button onClick={handleExportParticipants}>Export participants</button>
-                    <button onClick={handleExportParticipantsXlsx}>Export participants xlsx</button>
-                </div>
             ) : (
-                <p>No participants found</p>
+                <p>No groups found</p>
             )}
+            <button onClick={handleExportParticipants}>Export participants</button>
+            <button onClick={handleExportParticipantsXlsx}>Export participants xlsx</button>
         </div>
     );
 }
