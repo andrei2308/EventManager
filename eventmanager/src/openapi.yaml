@@ -1,13 +1,17 @@
 openapi: 3.0.0
 info:
-  title: Event Manager API
+  title: Event Management API
+  description: API for user authentication, event management, and group operations.
   version: 1.0.0
-  description: API for managing events and users in the Event Manager application.
+servers:
+  - url: http://localhost:3000
+    description: Local server
+
 paths:
   /login:
     post:
       summary: User login
-      description: Authenticate user and return a JWT token.
+      description: Logs in a user and returns a token.
       requestBody:
         required: true
         content:
@@ -23,14 +27,28 @@ paths:
                 - username
                 - password
       responses:
-        '200':
+        200:
           description: Login successful
-        '401':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  message:
+                    type: string
+                  user:
+                    type: object
+        401:
           description: Invalid username or password
+        500:
+          description: Server error during login
+
   /register:
     post:
       summary: User registration
-      description: Register a new user.
+      description: Registers a new user.
       requestBody:
         required: true
         content:
@@ -49,83 +67,41 @@ paths:
                 - password
                 - email
       responses:
-        '201':
+        201:
           description: Registration successful
-        '400':
+        400:
           description: User already exists
-        '500':
+        500:
           description: Server error during registration
+
   /user:
     get:
       summary: Get user info
-      description: Retrieve information about the authenticated user.
+      description: Retrieves user information.
       security:
         - bearerAuth: []
       responses:
-        '200':
-          description: User info retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: User info
-                  user:
-                    type: object
-                    properties:
-                      _id:
-                        type: string
-                        example: 1234567890abcdef
-                      username:
-                        type: string
-                        example: john_doe
-                      email:
-                        type: string
-                        example: john.doe@example.com
-        '401':
-          description: Access token missing or invalid
-        '404':
+        200:
+          description: User info retrieved
+        404:
           description: User not found
-        '500':
+        500:
           description: Server error fetching user data
 
   /events:
     get:
       summary: Get events
-      description: Retrieve a list of events.
+      description: Retrieves events not organized by the current user.
       security:
         - bearerAuth: []
       responses:
-        '200':
-          description: List of events retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  events:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                          example: 1
-                        name:
-                          type: string
-                          example: Event 1
-                        date:
-                          type: string
-                          format: date
-                          example: 2024-12-01
-        '401':
-          description: Access token missing or invalid
-
+        200:
+          description: Events found
+        500:
+          description: Server error fetching events
     post:
-      summary: Create event
-      description: Create a new event.
+      summary: Create an event
+      description: Creates a new event.
       security:
         - bearerAuth: []
       requestBody:
@@ -137,16 +113,269 @@ paths:
               properties:
                 name:
                   type: string
-                  example: Event 1
-                date:
+                description:
                   type: string
-                  format: date
-                  example: 2024-12-01
+                start_time:
+                  type: string
+                  format: date-time
+                end_time:
+                  type: string
+                  format: date-time
+                access_code:
+                  type: string
+                group:
+                  type: string
+              required:
+                - name
+                - description
+                - start_time
+                - end_time
       responses:
-        '201':
+        201:
           description: Event created successfully
-        '401':
-          description: Access token missing or invalid
+        500:
+          description: Server error creating event
+
+  /events/{eventId}:
+    get:
+      summary: Get event details
+      description: Retrieves details of a specific event.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Event found
+        404:
+          description: Event not found
+        500:
+          description: Server error fetching event details
+    delete:
+      summary: Delete event
+      description: Deletes an event organized by the current user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Event deleted successfully
+        403:
+          description: Unauthorized to delete event
+        404:
+          description: Event not found
+        500:
+          description: Server error deleting event
+
+  /events/{eventId}/join:
+    post:
+      summary: Join an event
+      description: Adds the current user as a participant in the event.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Joined event successfully
+        400:
+          description: User already joined
+        404:
+          description: Event not found
+        500:
+          description: Server error joining event
+
+  /events/{eventId}/participants:
+    get:
+      summary: Get event participants
+      description: Retrieves participants of a specific event.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Participants retrieved
+        404:
+          description: Event not found
+        500:
+          description: Server error fetching participants
+
+  /group:
+    post:
+      summary: Create a group
+      description: Creates a new event group.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+              required:
+                - name
+                - description
+      responses:
+        201:
+          description: Group created successfully
+        500:
+          description: Server error creating group
+
+  /groups:
+    get:
+      summary: Get all groups
+      description: Retrieves all groups.
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Groups found
+        500:
+          description: Server error fetching groups
+
+  /groups/details/{groupId}:
+    get:
+      summary: Get group events
+      description: Retrieves events associated with a specific group.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Events found
+        404:
+          description: Events not found
+        500:
+          description: Server error fetching group details
+
+  /groups/admin/{userId}:
+    get:
+      summary: Get groups organized by a user
+      description: Retrieves all groups organized by a specific user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Groups found
+        404:
+          description: User not found
+        500:
+          description: Server error fetching user groups
+
+  /events/admin/{userId}:
+    get:
+      summary: Get events organized by a user
+      description: Retrieves all events organized by a specific user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Events found
+        404:
+          description: User not found
+        500:
+          description: Server error fetching user events
+
+  /events/details/admin/{eventId}:
+    get:
+      summary: Get detailed information about an event
+      description: Retrieves detailed information about an event organized by the user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Event found
+        404:
+          description: Event not found
+        500:
+          description: Server error fetching event details
+
+  /events/admin/groups/{groupId}:
+    get:
+      summary: Get events for a group organized by the user
+      description: Retrieves events for a specific group organized by the user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Events found
+        404:
+          description: Events not found
+        500:
+          description: Server error fetching group events
+
+  /groups/admin/export/participants/{userId}:
+    get:
+      summary: Export participants of groups organized by a user
+      description: Exports a list of participants for all events in groups organized by a specific user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Participants found
+        404:
+          description: User not found
+        500:
+          description: Server error fetching participants
+
 components:
   securitySchemes:
     bearerAuth:
