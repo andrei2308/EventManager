@@ -44,7 +44,6 @@ export function EventsCreate() {
                 end_time: endTime,
                 access_code: generatedAccessCode,
                 group: group || null,
-                qrCode: qrCode
             };
 
             // Send the event data to the backend

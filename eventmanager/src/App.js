@@ -98,7 +98,7 @@ function AppRoutes() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<App />} />
+        <Route path="/EventManager" element={<App />} />
         <Route path="/user" element={<UserPage />} />
         <Route path="/events" element={<Events />} />
         <Route path="/events/create" element={<EventsCreate />} />
