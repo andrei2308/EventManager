@@ -20,7 +20,7 @@ export function CreateGroup() {
                 description,
                 group
             };
-            const response = await axiosInstance.post('http://localhost:10001/group', groupData);
+            const response = await axiosInstance.post('https://eventmanager-1-l2dr.onrender.com/group', groupData);
 
             setMessage(`Event created successfully: ${response.data.message}`);
         } catch (err) {

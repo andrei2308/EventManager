@@ -11,7 +11,7 @@ export function Events() {
             setError('No token found, please log in.');
             return;
         }
-        axiosInstance.get('http://localhost:10001/events')
+        axiosInstance.get('https://eventmanager-1-l2dr.onrender.com/events')
             .then((response) => {
                 setEvents(response.data.events || []);
             })

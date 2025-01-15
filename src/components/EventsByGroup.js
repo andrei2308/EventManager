@@ -17,7 +17,7 @@ export function EventsByGroup() {
             }
 
             try {
-                const response = await axiosInstance.get(`http://localhost:10001/groups/details/${groupId}`);
+                const response = await axiosInstance.get(`https://eventmanager-1-l2dr.onrender.com/groups/details/${groupId}`);
                 setEvents(response.data.events);
             } catch (err) {
                 console.error(err);

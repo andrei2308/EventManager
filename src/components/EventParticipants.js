@@ -32,7 +32,7 @@ export function EventParticipants() {
             setError("No token found, please log in.");
             return;
         }
-        axiosInstance.get(`http://localhost:10001/groups/admin/export/participants/${userId}`)
+        axiosInstance.get(`https://eventmanager-1-l2dr.onrender.com/groups/admin/export/participants/${userId}`)
             .then((response) => {
                 console.log(response.data);
 
@@ -60,7 +60,7 @@ export function EventParticipants() {
             setError("No token found, please log in.");
             return;
         }
-        axiosInstance.get(`http://localhost:10001/groups/admin/export/participants/${userId}`)
+        axiosInstance.get(`https://eventmanager-1-l2dr.onrender.com/groups/admin/export/participants/${userId}`)
             .then((response) => {
                 console.log(response.data);
 

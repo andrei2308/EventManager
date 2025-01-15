@@ -14,7 +14,7 @@ export function AdminEventsFromGroup() {
             setError("No token found, please log in.");
             return;
         }
-        axiosInstance.get(`http://localhost:10001/events/admin/groups/${groupId}`)
+        axiosInstance.get(`https://eventmanager-1-l2dr.onrender.com/events/admin/groups/${groupId}`)
             .then((response) => {
                 setEvents(response.data.events || []);
             })

@@ -17,7 +17,7 @@ function UserPage() {
             return;
         }
 
-        axiosInstance.get(`http://localhost:10001/user`)
+        axiosInstance.get(`https://eventmanager-1-l2dr.onrender.com/user`)
             .then(response => {
                 setUserData(response.data.user);
             })

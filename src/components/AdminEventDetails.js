@@ -18,7 +18,7 @@ export function AdminEventsDetails() {
             setError("No token found, please log in.");
             return;
         }
-        axiosInstance.get(`http://localhost:10001/events/details/admin/${eventId}`)
+        axiosInstance.get(`https://eventmanager-1-l2dr.onrender.com/events/details/admin/${eventId}`)
             .then((response) => {
                 setEvent(response.data.event || []);
             })
@@ -37,7 +37,7 @@ export function AdminEventsDetails() {
     };
     const handleDeleteEvent = () => {
         // are you sure?
-        axiosInstance.delete(`http://localhost:10001/events/${eventId}`)
+        axiosInstance.delete(`https://eventmanager-1-l2dr.onrender.com/events/${eventId}`)
             .then(() => {
                 alert('Event deleted');
                 redirect(`/events/${userId}`);

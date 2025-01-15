@@ -48,7 +48,7 @@ export function EventsCreate() {
             };
 
             // Send the event data to the backend
-            const response = await axiosInstance.post('http://localhost:10001/events', eventData);
+            const response = await axiosInstance.post('https://eventmanager-1-l2dr.onrender.com/events', eventData);
 
             setMessage(`Event created successfully: ${response.data.message}`);
 

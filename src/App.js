@@ -26,7 +26,7 @@ function App() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://localhost:10001/login`, { username, password });
+      const response = await axios.post(`https://eventmanager-1-l2dr.onrender.com/login`, { username, password });
       setMessage('Login successful!');
       console.log("Token", response.data.token);
 
@@ -48,7 +48,7 @@ function App() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`http://localhost:10001/register`, { username, password, email });
+      await axios.post(`https://eventmanager-1-l2dr.onrender.com/register`, { username, password, email });
       setMessage('Registration successful! Please login.');
       setIsLogin(true);
     } catch (error) {
