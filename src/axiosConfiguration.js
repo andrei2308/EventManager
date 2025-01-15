@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:10001',
+    baseURL: 'https://eventmanager-1-l2dr.onrender.com/',
     headers: {
         'Content-Type': 'application/json',
     },
