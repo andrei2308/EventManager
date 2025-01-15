@@ -41,7 +41,7 @@ export function EventsDetails() {
             try {
                 // Logic to join event (e.g., API call)
                 console.log('Successfully joined event!');
-                await axiosInstance.post(`/events/${eventId}/join`);
+                await axiosInstance.post(`https://eventmanager-1-l2dr.onrender.com/events/${eventId}/join`);
                 redirect('/events');
             } catch (err) {
                 console.error('Error joining event:', err);
