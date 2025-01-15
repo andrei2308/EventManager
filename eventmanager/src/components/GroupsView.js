@@ -6,7 +6,6 @@ export function GroupsView() {
     const [groups, setGroups] = useState([]);
     const [error, setError] = useState('');
     const navigate = useNavigate();
-
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -41,7 +40,7 @@ export function GroupsView() {
                             onClick={() => handleGroupClick(group.id)} // Add click handler
                             style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }} // Optional styles
                         >
-                            {group.name}, {group._id}
+                            {group.name}
                         </li>
                     ))}
                 </ul>

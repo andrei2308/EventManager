@@ -9,7 +9,7 @@ export function AdminEventsDetails() {
     const [error, setError] = useState("");
     const redirect = useNavigate();
     const { eventId } = useParams();
-    const userId = JSON.parse(localStorage.getItem('user'))._id;
+    const userId = JSON.parse(localStorage.getItem('userID'));
     useEffect(() => {
 
         const token = localStorage.getItem("token");

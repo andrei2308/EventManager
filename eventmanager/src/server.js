@@ -161,7 +161,7 @@ app.get('/user', authenticateToken, async (req, res) => {
  */
 app.get('/events', authenticateToken, (req, res) => {
     const userId = req.user.id;
-
+    console.log(req);
     // Find events where the organizer is NOT the current user
     Event.find({ organizer: { $ne: userId } })
         .then((events) => {
@@ -303,11 +303,16 @@ app.post('/group', authenticateToken, async (req, res) => {
     }
 });
 app.get('/groups', authenticateToken, async (req, res) => {
-    EventGroup.find({}).then((groups) => {
-        res.json({ message: 'Groups found', groups });
-    }).catch((error) => {
-        res.status(500).json({ message: 'Server error fetching groups: ' + error.message });
-    });
+    const userID = req.user.id;
+    //we only search for groups that the user is not the organizer of
+    EventGroup.find({ organizer: { $ne: userID } })
+        .then((groups) => {
+            res.json({ message: 'Groups found', groups });
+            console.log(groups);
+        })
+        .catch((error) => {
+            res.status(500).json({ message: 'Server error fetching groups: ' + error.message });
+        });
 });
 app.get("/groups/details/:groupId", authenticateToken, async (req, res) => {
     const { groupId } = req.params;

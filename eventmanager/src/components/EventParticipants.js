@@ -7,7 +7,7 @@ export function EventParticipants() {
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const { eventId } = useParams();
-    const userId = JSON.parse(localStorage.getItem('user'))._id;
+    const userId = JSON.parse(localStorage.getItem('userID'));
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) {

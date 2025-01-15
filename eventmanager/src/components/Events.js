@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 export function Events() {
     const [events, setEvents] = useState([]);
     const [error, setError] = useState('');
-    const [event, setEvent] = useState(null);
     const navigate = useNavigate();
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -12,8 +11,7 @@ export function Events() {
             setError('No token found, please log in.');
             return;
         }
-        const user = JSON.parse(localStorage.getItem('user'));
-        axiosInstance.get('http://localhost:10001/events', user._id)
+        axiosInstance.get('http://localhost:10001/events')
             .then((response) => {
                 setEvents(response.data.events || []);
             })
