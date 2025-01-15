@@ -9,7 +9,7 @@ export function EventsDetails() {
     const [event, setEvent] = useState(null);
     const [error, setError] = useState('');
     const redirect = useNavigate();
-    const user = JSON.parse(localStorage.getItem('user'));
+    const userID = JSON.parse(localStorage.getItem('userID'));
     console.log('hit');
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -34,7 +34,7 @@ export function EventsDetails() {
                 setError('Event is already open.');
                 return;
             }
-            if (event.participants.includes(user._id)) {
+            if (event.participants.includes(userID)) {
                 setError('You are already a participant.');
                 return;
             }

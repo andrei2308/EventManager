@@ -32,7 +32,7 @@ function App() {
 
       // Store the token in localStorage
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+      localStorage.setItem('userID', JSON.stringify(response.data.user._id));
       await sleep(1500);
       setMessage('Logging in...');
       await sleep(2000);
