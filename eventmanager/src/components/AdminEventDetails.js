@@ -2,16 +2,17 @@ import { useState, useEffect } from "react";
 import axiosInstance from "../axiosConfiguration";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { QRCodeCanvas } from "qrcode.react";
 console.log("hit");
 export function AdminEventsDetails() {
     const [event, setEvent] = useState(null);
     const [events, setEvents] = useState([]);
     const [error, setError] = useState("");
+    const [qrCode, setQrCode] = useState("");
     const redirect = useNavigate();
     const { eventId } = useParams();
     const userId = JSON.parse(localStorage.getItem('userID'));
     useEffect(() => {
-
         const token = localStorage.getItem("token");
         if (!token) {
             setError("No token found, please log in.");
@@ -57,6 +58,8 @@ export function AdminEventsDetails() {
                     <p>End time: {new Date(event.end_time).toLocaleString()}</p>
                     <p>Access code: {event.access_code}</p>
                     <p>Status:{event.status}</p>
+                    <QRCodeCanvas value={`${window.location.origin}/${eventId}/join`} size={256} />
+                    <br />
                     <button onClick={handleClickEdit}>Edit Event</button>
                     <button onClick={handleClickSeeParticipants}>See Participants</button>
                     <button onClick={handleDeleteEvent}>Delete Event</button>

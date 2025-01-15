@@ -35,14 +35,16 @@ export function EventsCreate() {
             // Generate access code
             const generatedAccessCode = generateAccessCode();
             setAccessCode(generatedAccessCode); // Store the generated access code
-
+            // Generate QR code for the access code
+            setQrCode(generatedAccessCode); // Store the access code for QR code generation
             const eventData = {
                 name,
                 description,
                 start_time: startTime,
                 end_time: endTime,
                 access_code: generatedAccessCode,
-                group: group || null
+                group: group || null,
+                qrCode: qrCode
             };
 
             // Send the event data to the backend
@@ -50,8 +52,6 @@ export function EventsCreate() {
 
             setMessage(`Event created successfully: ${response.data.message}`);
 
-            // Generate QR code for the access code
-            setQrCode(generatedAccessCode); // Store the access code for QR code generation
         } catch (err) {
             setMessage(`Error creating event: ${err.response?.data.message || err.message}`);
         }
