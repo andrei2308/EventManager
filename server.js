@@ -13,12 +13,12 @@ const helmet = require('helmet');
 const swaggerUi = require('swagger-ui-express');
 const path = require('path');
 const fs = require('fs');
-const User = require('./Schemas/UserSchema.js');
-const Event = require('./Schemas/EventSchema.js');
-const EventGroup = require('./Schemas/EventGroupSchema.js');
+const User = require('./src/Schemas/UserSchema.js');
+const Event = require('./src/Schemas/EventSchema.js');
+const EventGroup = require('./src/Schemas/EventGroupSchema.js');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-require('./Jobs/cronJobs.js');
+require('./src/Jobs/cronJobs.js');
 /**
  * @constant {Object} app - Express application instance.
  */
