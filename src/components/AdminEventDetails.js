@@ -59,7 +59,7 @@ export function AdminEventsDetails() {
                     <p>Access code: {event.access_code}</p>
                     <p>Status:{event.status}</p>
                     <QRCodeCanvas
-                        value={`https://andrei2308.github.io/EventsManager?eventId=${event._id}&action=join`}
+                        value={`https://andrei2308.github.io/EventManager?eventId=${event._id}&action=join`}
                         size={256}
                     />
                     <br />
