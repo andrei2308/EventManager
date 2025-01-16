@@ -44,6 +44,16 @@ const eventSchema = mongoose.Schema({
             type: Date,
             default: Date.now
         }
+    }],
+    guests: [{
+        name: {
+            type: String,
+            required: true
+        },
+        joinedAt: {
+            type: Date,
+            default: Date.now
+        }
     }]
 }, { timestamps: true });
 

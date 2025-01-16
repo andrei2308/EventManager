@@ -33,7 +33,7 @@ function UserPage() {
     }
     const handleLogout = () => {
         localStorage.removeItem('token')
-        navigate("/")
+        navigate("/EventManager")
     }
     const handleViewEvents = () => {
         navigate("/events")
