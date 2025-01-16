@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 export function EventParticipants() {
     const [participants, setParticipants] = useState([]);
     const [error, setError] = useState('');
+    const [guests, setGuests] = useState([]);
     const navigate = useNavigate();
     const { eventId } = useParams();
     const userId = JSON.parse(localStorage.getItem('userID'));
@@ -17,6 +18,7 @@ export function EventParticipants() {
         axiosInstance.get(`/events/${eventId}/participants`)
             .then((response) => {
                 setParticipants(response.data.participants || []);
+                setGuests(response.data.guests || []);
                 console.log(response.data.participants);
             })
             .catch((err) => {
@@ -115,6 +117,14 @@ export function EventParticipants() {
                             </li>
                         ))}
 
+                    </ul>
+                    <h2>Guests</h2>
+                    <ul>
+                        {guests.map((guest) => (
+                            <li key={guest.name}>
+                                Guest {guest.name} joined at {guest.joinedAt}
+                            </li>
+                        ))}
                     </ul>
                     <button onClick={handleExportParticipants}>Export participants</button>
                     <button onClick={handleExportParticipantsXlsx}>Export participants xlsx</button>
