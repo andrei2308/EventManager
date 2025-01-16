@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import axios from 'axios';
-import { HashRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import UserPage from './components/UserPage.js';  // Import UserPage component
 import { Events } from './components/Events.js';
 import { EventsCreate } from './components/EventsCreate.js';
@@ -14,7 +14,6 @@ import { AdminEvents } from './components/AdminEvents.js';
 import { AdminEventsDetails } from './components/AdminEventDetails.js';
 import { AdminGroups } from './components/AdminGroups.js';
 import { AdminEventsFromGroup } from './components/AdminEventsFromGroup.js';
-import { JoinByQR } from './components/JoinByQR.js';
 function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -112,7 +111,6 @@ function AppRoutes() {
         <Route path="/events/details/admin/:eventId" element={<AdminEventsDetails />} />
         <Route path="/groups/:userId" element={<AdminGroups />} />
         <Route path="/groups/details/admin/:groupId" element={<AdminEventsFromGroup />} />
-        <Route path="/events/:eventId/join" element={<JoinByQR />} />
       </Routes>
     </Router>
   );
