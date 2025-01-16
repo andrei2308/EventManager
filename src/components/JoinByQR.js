@@ -42,7 +42,7 @@ export function JoinByQR() {
             .post(`https://eventmanager-1-l2dr.onrender.com/events/${eventId}/join-guest`, { name: guestName })
             .then(() => {
                 alert('Successfully joined the event as a guest!');
-                redirect(`/events/${eventId}`);
+                redirect(`/EventManager`);
             })
             .catch((err) => {
                 setError('Failed to join as guest: ' + (err.response?.data.message || err.message));
