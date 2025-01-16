@@ -72,7 +72,6 @@ function authenticateToken(req, res, next) {
         next();
     });
 }
-
 /**
  * Swagger UI setup.
  */
@@ -197,6 +196,18 @@ app.get('/events/:eventId', authenticateToken, async (req, res) => {
             return res.status(404).json({ message: 'Event not found' });
         }
         res.json({ message: 'Event found', event });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error fetching event details: ' + error.message });
+    }
+});
+app.get('/events/:eventId/join', authenticateToken, async (req, res) => {
+    const { eventId } = req.params;
+    try {
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+        res.json({ message: 'Join event', event });
     } catch (error) {
         res.status(500).json({ message: 'Server error fetching event details: ' + error.message });
     }
