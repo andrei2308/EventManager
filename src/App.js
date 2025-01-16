@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import axios from 'axios';
 import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
@@ -23,7 +23,15 @@ function App() {
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const eventId = queryParams.get('eventId');
+    const action = queryParams.get('action');
 
+    if (eventId && action === 'join') {
+      navigate(`/events/${eventId}/join`);
+    }
+  }, [navigate]);
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -96,6 +104,7 @@ function App() {
 
 // Routing component
 function AppRoutes() {
+
   return (
     <Router>
       <Routes>
@@ -104,7 +113,7 @@ function AppRoutes() {
         <Route path="/events" element={<Events />} />
         <Route path="/events/create" element={<EventsCreate />} />
         <Route path="/events/details/:eventId" element={<EventsDetails />} />
-        <Route path="events/:eventId/participants" element={<EventParticipants />} />
+        <Route path="/events/:eventId/participants" element={<EventParticipants />} />
         <Route path="/groups" element={<CreateGroup />} />
         <Route path="/groups/view" element={<GroupsView />} />
         <Route path="/groups/details/:groupId" element={<EventsByGroup />} />
