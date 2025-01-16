@@ -444,6 +444,19 @@ app.get('/groups/admin/export/participants/:userId', authenticateToken, async (r
         res.status(500).json({ message: 'Server error fetching participants: ' + error.message });
     }
 });
+app.get('/events/attended/:userId', authenticateToken, async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const events = await Event.find({ participants: { $elemMatch: { userId } } });
+        res.json({ message: 'Attended events found', events });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error fetching attended events: ' + error.message });
+    }
+});
 /**
  * Start the server.
  */
