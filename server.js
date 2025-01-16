@@ -96,6 +96,7 @@ app.get('/openapi.yaml', (req, res) => {
  */
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
+    const { redirect } = req.query; // Retrieve redirect URL if provided
 
     try {
         const user = await User.findOne({ username });
@@ -109,12 +110,22 @@ app.post('/login', async (req, res) => {
         }
 
         const token = jwt.sign({ id: user._id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        // Automatically add the user to the event if redirect contains an event ID
+        if (redirect && redirect.startsWith('/events/')) {
+            const eventId = redirect.split('/')[2]; // Extract event ID
+            const event = await Event.findById(eventId);
+            if (event) {
+                event.participants.push({ id: user._id, name: user.username });
+                await event.save();
+            }
+        }
+
         res.json({ token, message: 'Login successful!', user });
     } catch (error) {
         res.status(500).json({ message: 'Server error during login: ' + error.message });
     }
 });
-
 /**
  * User registration endpoint.
  */
@@ -210,6 +221,29 @@ app.get('/events/:eventId/join', authenticateToken, async (req, res) => {
         res.json({ message: 'Join event', event });
     } catch (error) {
         res.status(500).json({ message: 'Server error fetching event details: ' + error.message });
+    }
+});
+app.post('/events/:eventId/join-guest', async (req, res) => {
+    const { eventId } = req.params;
+    const { name } = req.body;
+
+    if (!name) {
+        return res.status(400).json({ message: 'Name is required for guest access.' });
+    }
+
+    try {
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+
+        // Add the guest to the event's participants list
+        event.participants.push({ name, role: 'guest' });
+        await event.save();
+
+        res.json({ message: 'Successfully joined the event as a guest.' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error joining event as a guest: ' + error.message });
     }
 });
 app.post('/events/:eventId/join', authenticateToken, async (req, res) => {

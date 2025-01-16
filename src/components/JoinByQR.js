@@ -1,33 +1,53 @@
 import { useState, useEffect } from 'react';
 import axiosInstance from '../axiosConfiguration';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import { use } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
 export function JoinByQR() {
     const { eventId } = useParams();
     const [event, setEvent] = useState(null);
     const [error, setError] = useState('');
+    const [showGuestInput, setShowGuestInput] = useState(false);
+    const [guestName, setGuestName] = useState('');
     const redirect = useNavigate();
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            setError('No token found, please log in.');
-            redirect('/EventManager');
-        }
-        axiosInstance.get(`https://eventmanager-1-l2dr.onrender.com/events/:eventId/join`)
+        // Fetch event details
+        axiosInstance
+            .get(`https://eventmanager-1-l2dr.onrender.com/events/${eventId}/join`)
             .then((response) => {
                 setEvent(response.data.event);
             })
             .catch((err) => {
                 setError('Failed to fetch event details: ' + (err.response?.data.message || err.message));
             });
-        if (err.response.status === 401) {
-            setError('You are not authorized to join this event');
-        }
     }, [eventId]);
 
+    // Handles logging in and redirecting back to the event
+    const handleLogin = () => {
+        redirect(`/login?redirect=/events/${eventId}/join`);
+    };
+
+    // Handles registering and redirecting back to the event
+    const handleRegister = () => {
+        redirect(`/register?redirect=/events/${eventId}/join`);
+    };
+
+    // Handles joining as a guest
+    const handleGuestJoin = () => {
+        if (!guestName) {
+            setError('Please enter your name to join as a guest.');
+            return;
+        }
+        axiosInstance
+            .post(`https://eventmanager-1-l2dr.onrender.com/events/${eventId}/join-guest`, { name: guestName })
+            .then(() => {
+                alert('Successfully joined the event as a guest!');
+                redirect(`/events/${eventId}`);
+            })
+            .catch((err) => {
+                setError('Failed to join as guest: ' + (err.response?.data.message || err.message));
+            });
+    };
 
     return (
         <div>
@@ -39,10 +59,20 @@ export function JoinByQR() {
                     <p>Description: {event.description}</p>
                     <p>Start time: {new Date(event.start_time).toLocaleString()}</p>
                     <p>End time: {new Date(event.end_time).toLocaleString()}</p>
-                    <p>Access code: {event.access_code}</p>
-                    <p>Status: {event.status}</p>
-                    <p>Participants: {event.participants}</p>
-                    <button onClick={handleJoinEvent}>Join Event</button>
+                    <button onClick={handleLogin}>Log in</button>
+                    <button onClick={handleRegister}>Register</button>
+                    <button onClick={() => setShowGuestInput(true)}>Join as Guest</button>
+                    {showGuestInput && (
+                        <div>
+                            <input
+                                type="text"
+                                placeholder="Enter your name"
+                                value={guestName}
+                                onChange={(e) => setGuestName(e.target.value)}
+                            />
+                            <button onClick={handleGuestJoin}>Confirm</button>
+                        </div>
+                    )}
                 </div>
             )}
         </div>
