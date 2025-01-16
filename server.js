@@ -238,7 +238,7 @@ app.post('/events/:eventId/join-guest', async (req, res) => {
         }
 
         // Add the guest to the event's participants list
-        event.participants.push({ name, role: 'guest' });
+        event.guests.push({ name, joinedAt: new Date() });
         await event.save();
 
         res.json({ message: 'Successfully joined the event as a guest.' });

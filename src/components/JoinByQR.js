@@ -24,12 +24,12 @@ export function JoinByQR() {
 
     // Handles logging in and redirecting back to the event
     const handleLogin = () => {
-        redirect(`/login?redirect=/events/${eventId}/join`);
+        redirect(`/EventManager?eventId=${eventId}&action=login`);
     };
 
     // Handles registering and redirecting back to the event
     const handleRegister = () => {
-        redirect(`/register?redirect=/events/${eventId}/join`);
+        redirect(`/EventManager?eventId=${eventId}&action=register`);
     };
 
     // Handles joining as a guest

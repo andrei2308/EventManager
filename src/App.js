@@ -31,6 +31,14 @@ function App() {
     if (eventId && action === 'join') {
       navigate(`/events/${eventId}/join`);
     }
+    if (eventId && action === 'login') {
+      localStorage.setItem('eventId', eventId);
+      navigate('/EventManager');
+    }
+    if (eventId && action === 'register') {
+      localStorage.setItem('eventId', eventId);
+      navigate('/EventManager');
+    }
   }, [navigate]);
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -42,13 +50,25 @@ function App() {
       // Store the token in localStorage
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userID', JSON.stringify(response.data.user._id));
-      await sleep(1500);
-      setMessage('Logging in...');
-      await sleep(2000);
 
-      // Redirect to /api/user after successful login
-      navigate('/user');
-
+      // Check if there's an eventId to join
+      const eventId = localStorage.getItem('eventId');
+      if (eventId) {
+        try {
+          // Make API call to join the event
+          await axios.post(`https://eventmanager-1-l2dr.onrender.com/events/${eventId}/join`, {}, {
+            headers: { Authorization: `Bearer ${response.data.token}` },
+          });
+          setMessage(`Successfully joined event ${eventId}`);
+          localStorage.removeItem('eventId');
+          navigate(`/user`);
+        } catch (joinError) {
+          setMessage('Failed to join event: ' + (joinError.response?.data.message || joinError.message));
+        }
+      } else {
+        // Redirect to the user dashboard if no eventId is present
+        navigate('/user');
+      }
     } catch (error) {
       setMessage('Login failed. ' + (error.response?.data.message || error.message));
     }
