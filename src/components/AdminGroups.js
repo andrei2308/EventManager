@@ -2,25 +2,29 @@ import { useState, useEffect } from "react";
 import axiosInstance from "../axiosConfiguration";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-
+import { Box, Grid, Card, CardContent, Typography, Button, Paper, CircularProgress } from "@mui/material";
 export function AdminGroups() {
     const [group, setGroup] = useState(null);
     const [groups, setGroups] = useState([]);
     const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
     const { userId } = useParams();
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (!token) {
             setError("No token found, please log in.");
+            setIsLoading(false);
             return;
         }
         axiosInstance.get(`https://eventmanager-1-l2dr.onrender.com/groups/admin/${userId}`)
             .then((response) => {
                 setGroups(response.data.groups || []);
+                setIsLoading(false);
             })
             .catch((err) => {
                 setError("Failed to fetch groups: " + (err.response?.data.message || err.message));
+                setIsLoading(false);
             });
     }, []);
     if (error) {
@@ -104,28 +108,54 @@ export function AdminGroups() {
             });
     };
 
-
+    if (isLoading) {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <CircularProgress />
+            </Box>
+        );
+    }
     return (
-        <div>
-            <h2>Groups</h2>
+        <Box sx={{ padding: 3 }}>
+            <Typography variant="h4" gutterBottom>
+                Groups
+            </Typography>
             {groups.length > 0 ? (
-                <ul>
+                <Grid container spacing={3}>
                     {groups.map((group) => (
-                        <li
-                            key={group._id}
-                            onClick={() => navigate(`/groups/details/admin/${group.id}`)} // Add click handler
-                            style={{ cursor: "pointer", color: "blue", textDecoration: "underline" }} // Optional styles
-                        >
-                            {group.name}
-                        </li>
+                        <Grid item xs={12} sm={6} md={4} key={group._id}>
+                            <Card
+                                onClick={() => navigate(`/groups/details/admin/${group.id}`)}
+                                sx={{
+                                    cursor: "pointer",
+                                    "&:hover": {
+                                        boxShadow: 4,
+                                    },
+                                }}
+                            >
+                                <CardContent>
+                                    <Typography variant="h5" gutterBottom>
+                                        {group.name}
+                                    </Typography>
+                                    <Typography variant="body2" color="textSecondary">
+                                        {group.description}
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
                     ))}
-                </ul>
-
+                </Grid>
             ) : (
-                <p>No groups found</p>
+                <Typography variant="body1">No groups found</Typography>
             )}
-            <button onClick={handleExportParticipants}>Export participants</button>
-            <button onClick={handleExportParticipantsXlsx}>Export participants xlsx</button>
-        </div>
+            <Box sx={{ marginTop: 3, display: "flex", gap: 2 }}>
+                <Button variant="contained" color="primary" onClick={handleExportParticipants}>
+                    Export Participants (CSV)
+                </Button>
+                <Button variant="contained" color="secondary" onClick={handleExportParticipantsXlsx}>
+                    Export Participants (XLSX)
+                </Button>
+            </Box>
+        </Box>
     );
 }

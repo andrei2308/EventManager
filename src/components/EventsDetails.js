@@ -4,10 +4,12 @@ import axiosInstance from '../axiosConfiguration';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { QRCodeCanvas } from 'qrcode.react';
+import { Box, Typography, Card, CardContent, TextField, Button, CircularProgress } from '@mui/material';
 export function EventsDetails() {
     const { eventId } = useParams();
     const [event, setEvent] = useState(null);
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
     const redirect = useNavigate();
     const userID = JSON.parse(localStorage.getItem('userID'));
     console.log('hit');
@@ -15,14 +17,17 @@ export function EventsDetails() {
         const token = localStorage.getItem('token');
         if (!token) {
             setError('No token found, please log in.');
+            setIsLoading(false);
             return;
         }
         axiosInstance.get(`https://eventmanager-1-l2dr.onrender.com/events/${eventId}`)
             .then((response) => {
                 setEvent(response.data.event);
+                setIsLoading(false);
             })
             .catch((err) => {
                 setError('Failed to fetch event details: ' + (err.response?.data.message || err.message));
+                setIsLoading(false);
             });
     }, [eventId]);
 
@@ -51,28 +56,75 @@ export function EventsDetails() {
             setError('Invalid access code.');
         }
     };
+    if (isLoading) {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <CircularProgress />
+            </Box>
+        );
+    }
     return (
-        <div>
-            <h2>Event Details</h2>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            {event && (
-                <div>
-                    <p>Name: {event.name}</p>
-                    <p>Description: {event.description}</p>
-                    <p>Start time: {new Date(event.start_time).toLocaleString()}</p>
-                    <p>End time: {new Date(event.end_time).toLocaleString()}</p>
-                    <p>Access code: {"Hidden"}</p>
-                    <p>Status:{event.status}</p>
-                    {/* Participant: Enter Access Code */}
-                    <input
-                        type="text"
-                        placeholder="Enter access code"
-                        value={enteredCode}
-                        onChange={(e) => setEnteredCode(e.target.value)}
-                    />
-                    <button onClick={handleJoinEvent}>Join Event</button>
-                </div>
+        <Box sx={{ padding: 3 }}>
+            {error && (
+                <Typography variant="body1" color="error" gutterBottom>
+                    {error}
+                </Typography>
             )}
-        </div>
+            {event && (
+                <Card sx={{ maxWidth: 600, margin: '0 auto', boxShadow: 4 }}>
+                    <CardContent>
+                        <Typography variant="h4" gutterBottom>
+                            Event Details
+                        </Typography>
+                        <Typography variant="body1" gutterBottom>
+                            <strong>Name:</strong> {event.name}
+                        </Typography>
+                        <Typography variant="body1" gutterBottom>
+                            <strong>Description:</strong> {event.description}
+                        </Typography>
+                        <Typography variant="body1" gutterBottom>
+                            <strong>Start Time:</strong> {new Date(event.start_time).toLocaleString()}
+                        </Typography>
+                        <Typography variant="body1" gutterBottom>
+                            <strong>End Time:</strong> {new Date(event.end_time).toLocaleString()}
+                        </Typography>
+                        <Typography variant="body1" gutterBottom>
+                            <strong>Access Code:</strong> {"Hidden"}
+                        </Typography>
+                        <Typography
+                            variant="body1"
+                            gutterBottom
+                            sx={{
+                                color: event.status === 'CLOSED' ? 'red' : 'green',
+                                fontWeight: 'bold',
+                            }}
+                        >
+                            <strong>Status:</strong> {event.status}
+                        </Typography>
+
+                        <Box sx={{ marginTop: 3 }}>
+                            <TextField
+                                label="Enter Access Code"
+                                variant="outlined"
+                                fullWidth
+                                value={enteredCode}
+                                onChange={(e) => setEnteredCode(e.target.value)}
+                                error={!!error && error.includes('Invalid access code')}
+                                helperText={error.includes('Invalid access code') ? error : ''}
+                            />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                sx={{ marginTop: 2 }}
+                                fullWidth
+                                onClick={handleJoinEvent}
+                            >
+                                Join Event
+                            </Button>
+                        </Box>
+                    </CardContent>
+                </Card>
+            )}
+        </Box>
     );
 }

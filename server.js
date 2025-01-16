@@ -188,14 +188,21 @@ app.get('/events', authenticateToken, (req, res) => {
  */
 app.post('/events', authenticateToken, async (req, res) => {
     const { name, description, start_time, end_time, access_code, group } = req.body;
-    res.status(201).json({ message: 'Event created successfully' });
     if (group === undefined) {
         const newEvent = new Event({ name, description, start_time, end_time, access_code, organizer: req.user.id });
         await newEvent.save();
+        //get event id 
+        const eventId = newEvent._id;
+        //return event id
+        console.log(eventId);
+        res.json({ message: 'Event created successfully. Your event id is: ' + eventId, eventId });
     } else {
         const newEvent = new Event({ name, description, start_time, end_time, access_code, group, organizer: req.user.id });
-        console.log(group);
         await newEvent.save();
+        //get event id
+        const eventId = newEvent._id;
+        //return event id
+        res.json({ message: 'Event created successfully. Your event id is: ' + eventId, eventId });
     }
 });
 
