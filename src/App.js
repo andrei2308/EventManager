@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import axios from 'axios';
-import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import UserPage from './components/UserPage.js';  // Import UserPage component
 import { Events } from './components/Events.js';
 import { EventsCreate } from './components/EventsCreate.js';
