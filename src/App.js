@@ -15,6 +15,7 @@ import { AdminEventsDetails } from './components/AdminEventDetails.js';
 import { AdminGroups } from './components/AdminGroups.js';
 import { AdminEventsFromGroup } from './components/AdminEventsFromGroup.js';
 import { JoinByQR } from './components/JoinByQR.js';
+import { AttendedEvents } from './components/AttendedEvents.js';
 function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -142,6 +143,7 @@ function AppRoutes() {
         <Route path="/groups/:userId" element={<AdminGroups />} />
         <Route path="/groups/details/admin/:groupId" element={<AdminEventsFromGroup />} />
         <Route path="/events/:eventId/join" element={<JoinByQR />} />
+        <Route path="/events/attended/:userId" element={<AttendedEvents />} />
       </Routes>
     </Router>
   );

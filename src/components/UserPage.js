@@ -53,6 +53,9 @@ function UserPage() {
     const handleViewMyGroups = () => {
         navigate(`/groups/${userData._id}`)
     }
+    const handleViewAttendedEvents = () => {
+        navigate(`/events/attended/${userData._id}`)
+    }
     return (
         <div>
             <h2>Welcome, {userData.username}!</h2>
@@ -71,6 +74,7 @@ function UserPage() {
                 </div>
             )}
             <button onClick={handleViewGroups}>View groups</button>
+            <button onClick={handleViewAttendedEvents}>Joined events</button>
         </div>
     );
 }
