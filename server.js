@@ -307,8 +307,8 @@ app.get('/events/:eventId/participants', authenticateToken, async (req, res) => 
                 joinedAt
             };
         });
-
-        res.json({ message: 'Event participants', participants });
+        const guests = event.guests;
+        res.json({ message: 'Event participants', participants, guests });
     } catch (error) {
         res.status(500).json({ message: 'Server error fetching participants: ' + error.message });
     }
