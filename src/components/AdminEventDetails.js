@@ -58,7 +58,7 @@ export function AdminEventsDetails() {
                     <p>End time: {new Date(event.end_time).toLocaleString()}</p>
                     <p>Access code: {event.access_code}</p>
                     <p>Status:{event.status}</p>
-                    <QRCodeCanvas value={`https://andrei2308.github.io/events/${eventId}/join`} size={256} />
+                    <QRCodeCanvas value={`https://andrei2308.github.io/#/events/${eventId}/join`} size={256} />
                     <br />
                     <button onClick={handleClickEdit}>Edit Event</button>
                     <button onClick={handleClickSeeParticipants}>See Participants</button>
