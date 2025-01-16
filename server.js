@@ -211,7 +211,7 @@ app.get('/events/:eventId', authenticateToken, async (req, res) => {
         res.status(500).json({ message: 'Server error fetching event details: ' + error.message });
     }
 });
-app.get('/events/:eventId/join', authenticateToken, async (req, res) => {
+app.get('/events/:eventId/join', async (req, res) => {
     const { eventId } = req.params;
     try {
         const event = await Event.findById(eventId);
