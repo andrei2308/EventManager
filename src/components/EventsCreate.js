@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../axiosConfiguration';
 import { QRCodeCanvas } from 'qrcode.react'; // Correctly import QRCodeCanvas
-
+import { TextField, Button, Grid, Typography, Box, Paper } from '@mui/material';
 export function EventsCreate() {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -11,7 +11,7 @@ export function EventsCreate() {
     const [accessCode, setAccessCode] = useState(''); // Store the generated access code
     const [qrCode, setQrCode] = useState(''); // Store the QR code
     const [message, setMessage] = useState('');
-
+    const [eventId, setEventId] = useState(null);
     // Function to generate the random access code
     const generateAccessCode = () => {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -49,7 +49,7 @@ export function EventsCreate() {
 
             // Send the event data to the backend
             const response = await axiosInstance.post('https://eventmanager-1-l2dr.onrender.com/events', eventData);
-
+            setEventId(response.data.eventId);
             setMessage(`Event created successfully: ${response.data.message}`);
 
         } catch (err) {
@@ -58,53 +58,114 @@ export function EventsCreate() {
     };
 
     return (
-        <div>
-            <h2>Create Event</h2>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    placeholder="Event Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                />
-                <textarea
-                    placeholder="Event Description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                />
-                <input
-                    type="datetime-local"
-                    placeholder="Start Time"
-                    value={startTime}
-                    onChange={(e) => setStartTime(e.target.value)}
-                    required
-                />
-                <input
-                    type="datetime-local"
-                    placeholder="End Time"
-                    value={endTime}
-                    onChange={(e) => setEndTime(e.target.value)}
-                    required
-                />
-                <input
-                    type="text"
-                    placeholder="Group ID (optional)"
-                    value={group}
-                    onChange={(e) => setGroup(e.target.value)}
-                />
-                <button type="submit">Create Event</button>
-            </form>
+        <Box sx={{ padding: 3 }}>
+            <Typography variant="h4" gutterBottom>
+                Create Event
+            </Typography>
+            <Paper elevation={3} sx={{ padding: 3, marginBottom: 3 }}>
+                <form onSubmit={handleSubmit}>
+                    <Grid container spacing={3}>
+                        {/* Event Name */}
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Event Name"
+                                variant="outlined"
+                                fullWidth
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                required
+                            />
+                        </Grid>
 
-            {message && <p>{message}</p>}
+                        {/* Event Description */}
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Event Description"
+                                variant="outlined"
+                                fullWidth
+                                multiline
+                                rows={4}
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                            />
+                        </Grid>
 
-            {qrCode && (
-                <div>
-                    <h3>Access Code QR Code</h3>
-                    <p>Access Code: {accessCode}</p>
-                    <QRCodeCanvas value={qrCode} size={256} />
-                </div>
+                        {/* Start Time */}
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label="Start Time"
+                                type="datetime-local"
+                                fullWidth
+                                InputLabelProps={{ shrink: true }}
+                                value={startTime}
+                                onChange={(e) => setStartTime(e.target.value)}
+                                required
+                            />
+                        </Grid>
+
+                        {/* End Time */}
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label="End Time"
+                                type="datetime-local"
+                                fullWidth
+                                InputLabelProps={{ shrink: true }}
+                                value={endTime}
+                                onChange={(e) => setEndTime(e.target.value)}
+                                required
+                            />
+                        </Grid>
+
+                        {/* Group ID */}
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Group ID (optional)"
+                                variant="outlined"
+                                fullWidth
+                                value={group}
+                                onChange={(e) => setGroup(e.target.value)}
+                            />
+                        </Grid>
+
+                        {/* Submit Button */}
+                        <Grid item xs={12}>
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                color="primary"
+                                fullWidth
+                            >
+                                Create Event
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </form>
+            </Paper>
+
+            {/* Message Section */}
+            {message && (
+                <Box sx={{ marginBottom: 3 }}>
+                    <Typography variant="h6" color={message.startsWith('Error') ? 'error' : 'success'}>
+                        {message}
+                    </Typography>
+                </Box>
             )}
-        </div>
+
+            {/* QR Code Section */}
+            {qrCode && (
+                <Paper elevation={3} sx={{ padding: 3, textAlign: 'center' }}>
+                    <Typography variant="h6" gutterBottom>
+                        Access Code QR Code
+                    </Typography>
+                    <Typography variant="body1">Access Code: {accessCode}</Typography>
+                    <Box sx={{ display: 'inline-block', marginTop: 2 }}>
+                        <QRCodeCanvas
+                            value={`https://andrei2308.github.io/EventManager?eventId=${eventId}&action=join`}
+                            size={256}
+                        />
+                    </Box>
+                </Paper>
+            )}
+        </Box>
     );
 }

@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import axiosInstance from '../axiosConfiguration';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+import { Box, Grid, Card, CardContent, Typography, Button, CircularProgress } from '@mui/material';
 export function EventParticipants() {
     const [participants, setParticipants] = useState([]);
     const [error, setError] = useState('');
     const [guests, setGuests] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
     const { eventId } = useParams();
     const userId = JSON.parse(localStorage.getItem('userID'));
@@ -13,20 +15,29 @@ export function EventParticipants() {
         const token = localStorage.getItem('token');
         if (!token) {
             setError('No token found, please log in.');
+            setIsLoading(false);
             return;
         }
         axiosInstance.get(`/events/${eventId}/participants`)
             .then((response) => {
                 setParticipants(response.data.participants || []);
                 setGuests(response.data.guests || []);
-                console.log(response.data.participants);
+                setIsLoading(false);
             })
             .catch((err) => {
                 setError('Failed to fetch participants: ' + (err.response?.data.message || err.message));
+                setIsLoading(false);
             });
     }, []);
     if (error) {
         return <div><p>{error}</p></div>;
+    }
+    if (isLoading) {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <CircularProgress />
+            </Box>
+        );
     }
     const handleExportParticipants = async () => {
         const token = localStorage.getItem("token");
@@ -106,32 +117,66 @@ export function EventParticipants() {
             });
     };
     return (
-        <div>
-            <h2>Participants</h2>
-            {participants.length > 0 ? (
-                <div>
-                    <ul>
-                        {participants.map((participant) => (
-                            <li key={participant._id}>
-                                User {participant.username} joined at {participant.joinedAt}
-                            </li>
-                        ))}
+        <Box sx={{ padding: 3 }}>
+            <Typography variant="h4" gutterBottom>
+                Event Participants
+            </Typography>
 
-                    </ul>
-                    <h2>Guests</h2>
-                    <ul>
-                        {guests.map((guest) => (
-                            <li key={guest.name}>
-                                Guest {guest.name} joined at {guest.joinedAt}
-                            </li>
+            {participants.length > 0 || guests.length > 0 ? (
+                <>
+                    <Typography variant="h5" gutterBottom>
+                        Registered Participants
+                    </Typography>
+                    <Grid container spacing={3} sx={{ marginBottom: 4 }}>
+                        {participants.map((participant) => (
+                            <Grid item xs={12} sm={6} md={4} key={participant._id}>
+                                <Card>
+                                    <CardContent>
+                                        <Typography variant="h6">{participant.username}</Typography>
+                                        <Typography variant="body2" color="textSecondary">
+                                            Joined at: {new Date(participant.joinedAt).toLocaleString()}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
                         ))}
-                    </ul>
-                    <button onClick={handleExportParticipants}>Export participants</button>
-                    <button onClick={handleExportParticipantsXlsx}>Export participants xlsx</button>
-                </div>
+                    </Grid>
+
+                    <Typography variant="h5" gutterBottom>
+                        Guest Participants
+                    </Typography>
+                    <Grid container spacing={3}>
+                        {guests.map((guest) => (
+                            <Grid item xs={12} sm={6} md={4} key={guest.name}>
+                                <Card>
+                                    <CardContent>
+                                        <Typography variant="h6">Guest: {guest.name}</Typography>
+                                        <Typography variant="body2" color="textSecondary">
+                                            Joined at: {new Date(guest.joinedAt).toLocaleString()}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        ))}
+                    </Grid>
+
+                    <Box sx={{ marginTop: 4 }}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            sx={{ marginRight: 2 }}
+                            onClick={handleExportParticipants}
+                        >
+                            Export Participants (CSV)
+                        </Button>
+                        <Button variant="contained" color="secondary" onClick={handleExportParticipantsXlsx}>
+                            Export Participants (XLSX)
+                        </Button>
+                    </Box>
+                </>
             ) : (
-                <p>No participants found</p>
+                <Typography variant="body1">No participants or guests found</Typography>
             )}
-        </div>
+        </Box>
     );
 }

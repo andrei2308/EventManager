@@ -16,6 +16,7 @@ import { AdminGroups } from './components/AdminGroups.js';
 import { AdminEventsFromGroup } from './components/AdminEventsFromGroup.js';
 import { JoinByQR } from './components/JoinByQR.js';
 import { AttendedEvents } from './components/AttendedEvents.js';
+import { Button, Input, FormGroup } from "@mui/material"
 function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -91,7 +92,7 @@ function App() {
       <h1>{isLogin ? 'Login' : 'Register'}</h1>
       <form onSubmit={isLogin ? handleLogin : handleRegister}>
         {!isLogin && (
-          <input
+          <Input
             type="email"
             placeholder="Email"
             value={email}
@@ -99,26 +100,28 @@ function App() {
             required
           />
         )}
-        <input
+        <Input
+          style={{ marginTop: '20px' }}
           type="text"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
         />
-        <input
+        <Input
+          style={{ marginTop: '20px' }}
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">{isLogin ? 'Login' : 'Register'}</button>
+        <Button variant="contained" color="primary" style={{ marginTop: '20px' }} type="submit">{isLogin ? 'Login' : 'Register'}</Button>
       </form>
       <p>{message}</p>
-      <button onClick={() => setIsLogin(!isLogin)}>
+      <Button variant="contained" color="primary" style={{ marginTop: '20px' }} onClick={() => setIsLogin(!isLogin)}>
         Switch to {isLogin ? 'Register' : 'Login'}
-      </button>
+      </Button>
     </div>
   );
 }
