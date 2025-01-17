@@ -1,154 +1,158 @@
-EventManager
 
-EventManager is a web application for creating, managing, and tracking events. It provides features for user registration, login, creating events, and monitoring attendance, while ensuring security with JWT-based authentication and data integrity.
-Features
-1. User Management
+---
 
-    Register as a new user.
-    Login using a secure authentication system (JWT-based).
-    Role-based access: Users can be organizers or participants.
-    View and manage user details.
+# EventManager
 
-2. Event Management
+**EventManager** is a complete web application dedicated to managing events and event groups. The application allows users to create, manage, and participate in events efficiently and intuitively. With advanced features and a modern interface, EventManager is suitable for both regular users and administrators.
 
-    Create and manage events with the following details:
-        Name
-        Description
-        Start and end time
-        Unique access code (can be represented as QR codes).
-    Group events under a single category.
-    Set events as OPEN or CLOSED based on time.
+---
 
-3. Attendance Tracking
+## Features
 
-    Participants can mark attendance by entering a unique access code or scanning a QR code.
-    Organizers can view and export attendance data (CSV/XLSX).
-    Track when each participant confirmed attendance.
+### 1. **JWT-based Authentication**
+   - Secure authentication using JSON Web Tokens (JWT).
+   - Password hashing for increased security.
+   - Easy-to-use login and registration flow.
 
-Tech Stack
-Frontend
+### 2. **Dedicated User Page**
+   - View available events.
+   - Join events by entering an access code or scanning a QR code.
+   - Access groups and events the user has participated in.
 
-    React: For building dynamic user interfaces.
-    React Router: For routing within the application.
-    Axios: For making HTTP requests to the backend.
+### 3. **Dedicated Admin Page**
+   - Create and manage events.
+   - Create and manage event groups.
+   - View event participants and export them as CSV/XLSX.
+   - Open and close events manually or automatically.
 
-Backend
+### 4. **Automated Event Handling (cronJob)**
+   - Automatically open and close events based on their start and end times using cron jobs.
 
-    Node.js: Server-side runtime.
-    Express.js: Backend framework for API development.
-    Mongoose: ODM for MongoDB.
+### 5. **Group Events**
+   - Create groups to organize related events.
+   - View and access events within a specific group.
 
-Database
+### 6. **Event Creation**
+   - Create custom events with the following details:
+     - Event name.
+     - Description.
+     - Start and end date/time.
+     - Automatically generate an access code.
+     - Generate a unique QR code for easy access.
 
-    MongoDB: For storing user data, event details, and attendance records.
+### 7. **Group Creation**
+   - Organize related events into groups for better management.
+   - View group details and associated events.
 
-Security
+### 8. **Join Events via QR Code**
+   - Participate in events by scanning a unique QR code generated for each event.
 
-    JWT: For secure authentication.
-    bcrypt.js: For hashing passwords.
+### 9. **View and Export Participants**
+   - Export participant lists for events as CSV or XLSX files.
+   - Separate participants into registered users and guest attendees.
 
-Installation
+### 10. **Modern and Responsive Design**
+   - Interface built with **Material-UI (MUI)** for a sleek, modern, and responsive design.
+   - Clear separation of sections for users and administrators.
+   - Fully responsive design that adapts to different screen sizes.
 
-    Clone the Repository
+---
 
+## Technologies Used
+
+- **Frontend**: 
+  - **React**: Dynamic, component-based interface.
+  - **MUI (Material-UI)**: Modern, responsive design.
+- **Backend**:
+  - **Node.js & Express**: Application logic and REST API handling.
+  - **MongoDB**: NoSQL database for storing users, events, and groups.
+  - **JWT**: Secure authentication.
+- **Other Libraries and Tools**:
+  - **bcrypt**: Password hashing.
+  - **Cron jobs**: Automate opening and closing events.
+  - **QRCode.react**: Generate QR codes.
+
+---
+
+## Installation and Usage
+
+### 1. **Clone the Repository**
+```bash
 git clone https://github.com/andrei2308/EventManager.git
 cd EventManager
+```
 
-Install Dependencies
-
+### 2. **Install Dependencies**
+Install the required dependencies for both **frontend** and **backend**.
+```bash
+# Install backend dependencies
+cd backend
 npm install
 
-Set Up Environment Variables Create a .env file in the root directory and add the following variables:
+# Install frontend dependencies
+cd ../frontend
+npm install
+```
 
-MONGO_URI=mongodb://localhost:27017/eventmanager
-JWT_SECRET=your_jwt_secret
-PORT=10001
+### 3. **Configuration**
+- Create a `.env` file in the backend directory with the following variables:
+  ```env
+  PORT=5000
+  JWT_SECRET=your_jwt_secret_key
+  MONGO_URI=your_mongodb_connection_string
+  ```
+- (Optional) Customize other configuration details as needed.
 
-Run the Server
+### 4. **Run the Application**
+- Start the backend:
+  ```bash
+  cd backend
+  npm start
+  ```
+- Start the frontend:
+  ```bash
+  cd frontend
+  npm start
+  ```
 
-npm start
+---
 
-Run the Frontend Navigate to the frontend directory (if applicable) and start the development server:
+## Main Workflows
 
-    npm start
+### User:
+1. **Authentication**: Login/Register.
+2. **View Events**: Access available events and groups.
+3. **Participation**: Join events using access codes or QR codes.
+4. **Export Data**: View and export attended events.
 
-Endpoints
-Authentication
+### Administrator:
+1. **Create Events**: Add custom events with access codes and QR codes.
+2. **Manage Groups**: Organize related events into
 
-    POST /register
-    Register a new user.
-    Request body: { username, password, email }
+groups for better management.
+3. **Participants Management**: View and export participant data as CSV or XLSX files.
+4. **Automation**: Automatically open or close events based on their defined schedule.
 
-    POST /login
-    Log in and receive a JWT token.
-    Request body: { username, password }
+---
 
-User
+## Screenshots (Optional)
 
-    GET /user
-    Get user details (requires authentication).
+Include relevant screenshots to demonstrate the application, such as:
+1. Login and Registration Page.
+2. User Dashboard.
+3. Admin Dashboard.
+4. Event Details Page.
 
-Events
+---
 
-    POST /events
-    Create a new event (requires organizer role).
-    Request body: { name, description, start_time, end_time, access_code, group }
+## Contribution
 
-    GET /events
-    Retrieve a list of all events.
+1. Fork this repository.
+2. Create a new branch (`feature/new-feature`).
+3. Open a Pull Request (PR) for review.
 
-File Structure
+---
 
-EventManager/
-├── src/
-│   ├── api-routes/            # Backend route handlers
-│   ├── components/            # React components (UserPage, Events, etc.)
-│   ├── Schemas/               # Mongoose schemas for MongoDB
-│   │   ├── AttendanceSchema.js
-│   │   ├── EventGroupSchema.js
-│   │   ├── EventSchema.js
-│   │   ├── UserSchema.js
-│   ├── App.js                 # Main React component
-│   ├── server.js              # Express server entry point
-├── public/                    # Static files
-├── .env                       # Environment variables
-├── package.json               # Node.js dependencies
-└── README.md                  # Project documentation
+## License
 
-How to Use
-1. Register and Login
-
-    Open the application in your browser.
-    Register as a new user or log in with an existing account.
-
-2. Create an Event
-
-    Navigate to the "Create Event" page.
-    Fill in the event details and submit.
-
-3. View Events
-
-    Browse the list of events as an organizer or participant.
-
-4. Mark Attendance
-
-    Participants can mark their attendance by entering the unique access code or scanning a QR code.
-
-Future Improvements
-
-    Add notifications and reminders for upcoming events.
-    Enable uploading and displaying event images.
-    Support recurring events with customizable intervals.
-    Improve mobile responsiveness.
-
-Contributing
-
-Contributions are welcome! To contribute:
-
-    Fork the repository.
-    Create a new branch for your feature or bug fix.
-    Submit a pull request.
-
-License
-
-This project is licensed under the MIT License.
+This project is open-source and licensed under the [MIT License](LICENSE).
