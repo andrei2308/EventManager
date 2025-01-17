@@ -4,7 +4,7 @@ info:
   description: API for user authentication, event management, and group operations.
   version: 1.0.0
 servers:
-  - url: https://eventmanager-1-l2dr.onrender.com
+  - url: http://localhost:8080/
     description: Local server
 
 paths:
@@ -376,13 +376,6 @@ paths:
         500:
           description: Server error fetching participants
 
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-
   /events/attended/{userId}:
     get:
       summary: Get attended events for a specific user
@@ -478,10 +471,11 @@ components:
                 properties:
                   message:
                     type: string
-                    example: Server error fetching attended events: Internal Server Error
+                    example: Internal Server Error
+
 components:
   securitySchemes:
-    BearerAuth:
+    bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
