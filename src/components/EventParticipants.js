@@ -117,22 +117,59 @@ export function EventParticipants() {
             });
     };
     return (
-        <Box sx={{ padding: 3 }}>
-            <Typography variant="h4" gutterBottom>
+        <Box
+            sx={{
+                padding: 3,
+                backgroundColor: '#f5f5f5', // Light gray background for contrast
+                minHeight: '100vh',
+            }}
+        >
+            <Typography
+                variant="h4"
+                gutterBottom
+                sx={{
+                    color: '#1976d2', // Deep blue title
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                }}
+            >
                 Event Participants
             </Typography>
 
             {participants.length > 0 || guests.length > 0 ? (
                 <>
-                    <Typography variant="h5" gutterBottom>
+                    <Typography
+                        variant="h5"
+                        gutterBottom
+                        sx={{
+                            color: '#1b5e20', // Green for "Registered Participants"
+                            fontWeight: 'bold',
+                            marginTop: 3,
+                        }}
+                    >
                         Registered Participants
                     </Typography>
                     <Grid container spacing={3} sx={{ marginBottom: 4 }}>
-                        {participants.map((participant) => (
+                        {participants.map((participant, index) => (
                             <Grid item xs={12} sm={6} md={4} key={participant._id}>
-                                <Card>
+                                <Card
+                                    sx={{
+                                        backgroundColor: index % 2 === 0 ? '#e3f2fd' : '#fffde7', // Alternating blue and yellow
+                                        boxShadow: 2,
+                                        '&:hover': {
+                                            boxShadow: 6, // Subtle hover effect
+                                        },
+                                        transition: 'all 0.3s ease-in-out',
+                                        borderRadius: 2,
+                                    }}
+                                >
                                     <CardContent>
-                                        <Typography variant="h6">{participant.username}</Typography>
+                                        <Typography
+                                            variant="h6"
+                                            sx={{ color: '#0d47a1', fontWeight: 'bold' }} // Dark blue for participant name
+                                        >
+                                            {participant.username}
+                                        </Typography>
                                         <Typography variant="body2" color="textSecondary">
                                             Joined at: {new Date(participant.joinedAt).toLocaleString()}
                                         </Typography>
@@ -142,15 +179,38 @@ export function EventParticipants() {
                         ))}
                     </Grid>
 
-                    <Typography variant="h5" gutterBottom>
+                    <Typography
+                        variant="h5"
+                        gutterBottom
+                        sx={{
+                            color: '#f57f17', // Amber for "Guest Participants"
+                            fontWeight: 'bold',
+                            marginTop: 3,
+                        }}
+                    >
                         Guest Participants
                     </Typography>
                     <Grid container spacing={3}>
-                        {guests.map((guest) => (
+                        {guests.map((guest, index) => (
                             <Grid item xs={12} sm={6} md={4} key={guest.name}>
-                                <Card>
+                                <Card
+                                    sx={{
+                                        backgroundColor: index % 2 === 0 ? '#fffde7' : '#e3f2fd', // Alternating yellow and blue
+                                        boxShadow: 2,
+                                        '&:hover': {
+                                            boxShadow: 6, // Subtle hover effect
+                                        },
+                                        transition: 'all 0.3s ease-in-out',
+                                        borderRadius: 2,
+                                    }}
+                                >
                                     <CardContent>
-                                        <Typography variant="h6">Guest: {guest.name}</Typography>
+                                        <Typography
+                                            variant="h6"
+                                            sx={{ color: '#e65100', fontWeight: 'bold' }} // Orange for guest name
+                                        >
+                                            Guest: {guest.name}
+                                        </Typography>
                                         <Typography variant="body2" color="textSecondary">
                                             Joined at: {new Date(guest.joinedAt).toLocaleString()}
                                         </Typography>
@@ -160,7 +220,7 @@ export function EventParticipants() {
                         ))}
                     </Grid>
 
-                    <Box sx={{ marginTop: 4 }}>
+                    <Box sx={{ marginTop: 4, textAlign: 'center' }}>
                         <Button
                             variant="contained"
                             color="primary"
@@ -175,7 +235,16 @@ export function EventParticipants() {
                     </Box>
                 </>
             ) : (
-                <Typography variant="body1">No participants or guests found</Typography>
+                <Typography
+                    variant="body1"
+                    sx={{
+                        textAlign: 'center',
+                        color: '#757575', // Neutral gray for "No participants" message
+                        marginTop: 5,
+                    }}
+                >
+                    No participants or guests found
+                </Typography>
             )}
         </Box>
     );

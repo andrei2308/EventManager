@@ -38,25 +38,50 @@ export function AdminEvents() {
         );
     }
     return (
-        <Box sx={{ padding: 3 }}>
-            <Typography variant="h4" gutterBottom>
+        <Box
+            sx={{
+                padding: 3,
+                backgroundColor: '#f3f4f6', // Light gray background for contrast
+                minHeight: '100vh',
+            }}
+        >
+            <Typography
+                variant="h4"
+                gutterBottom
+                sx={{
+                    color: '#2e7d32', // Green heading color
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                }}
+            >
                 Events
             </Typography>
             {events.length > 0 ? (
                 <Grid container spacing={3}>
-                    {events.map((event) => (
+                    {events.map((event, index) => (
                         <Grid item xs={12} sm={6} md={4} key={event._id}>
                             <Card
                                 onClick={() => navigate(`/events/details/admin/${event._id}`)}
                                 sx={{
-                                    cursor: "pointer",
-                                    "&:hover": {
-                                        boxShadow: 4, // Add shadow on hover
+                                    cursor: 'pointer',
+                                    backgroundColor: index % 2 === 0 ? '#c8e6c9' : '#fff9c4', // Alternating green and yellow
+                                    '&:hover': {
+                                        boxShadow: 6, // Shadow effect on hover
+                                        backgroundColor: index % 2 === 0 ? '#a5d6a7' : '#fff59d', // Slightly darker shade on hover
                                     },
+                                    borderRadius: 2, // Rounded corners
+                                    transition: 'all 0.3s ease-in-out', // Smooth hover transition
                                 }}
                             >
                                 <CardContent>
-                                    <Typography variant="h5" gutterBottom>
+                                    <Typography
+                                        variant="h5"
+                                        gutterBottom
+                                        sx={{
+                                            color: '#1b5e20', // Dark green for title
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
                                         {event.name}
                                     </Typography>
                                     <Typography variant="body2" color="textSecondary">
@@ -68,12 +93,12 @@ export function AdminEvents() {
                                     <Typography
                                         variant="body1"
                                         sx={{
-                                            color: event.status === "CLOSED" ? "green" : "red",
-                                            fontWeight: "bold",
+                                            color: event.status === 'CLOSED' ? '#388e3c' : '#d32f2f', // Green for "Not started", red for "In progress"
+                                            fontWeight: 'bold',
                                             marginTop: 1,
                                         }}
                                     >
-                                        Status: {event.status === "CLOSED" ? "Not started" : "In progress"}
+                                        Status: {event.status === 'CLOSED' ? 'Not started' : 'In progress'}
                                     </Typography>
                                 </CardContent>
                             </Card>
@@ -81,8 +106,18 @@ export function AdminEvents() {
                     ))}
                 </Grid>
             ) : (
-                <Typography variant="body1">No events found</Typography>
+                <Typography
+                    variant="body1"
+                    sx={{
+                        textAlign: 'center',
+                        color: '#757575',
+                        marginTop: 5,
+                    }}
+                >
+                    No events found
+                </Typography>
             )}
         </Box>
     );
+
 }

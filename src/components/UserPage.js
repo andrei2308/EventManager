@@ -61,7 +61,7 @@ function UserPage() {
         navigate(`/events/attended/${userData._id}`)
     }
     return (
-        <Box sx={{ padding: 3 }}>
+        <Box sx={{ padding: 3, backgroundColor: '#f3f4f6', minHeight: '100vh' }}>
             {/* Logout Button Positioned at the Top Right */}
             <Box display="flex" justifyContent="flex-end" mb={2}>
                 <Button variant="outlined" color="error" onClick={handleLogout}>
@@ -70,29 +70,82 @@ function UserPage() {
             </Box>
 
             {/* Welcome Section */}
-            <Paper elevation={3} sx={{ padding: 3, marginBottom: 3 }}>
-                <Typography variant="h4" gutterBottom>
+            <Paper
+                elevation={3}
+                sx={{
+                    padding: 3,
+                    marginBottom: 3,
+                    backgroundColor: '#ffffff',
+                    borderRadius: 2,
+                }}
+            >
+                <Typography
+                    variant="h4"
+                    gutterBottom
+                    sx={{ color: '#0d47a1', fontWeight: 'bold' }}
+                >
                     Welcome, {userData.username}!
                 </Typography>
-                <Typography variant="body1">Email: {userData.email}</Typography>
-                <Typography variant="body1">User ID: {userData._id}</Typography>
+                <Typography variant="body1" sx={{ color: '#424242' }}>
+                    Email: {userData.email}
+                </Typography>
+                <Typography variant="body1" sx={{ color: '#424242' }}>
+                    User ID: {userData._id}
+                </Typography>
             </Paper>
 
             {/* Buttons Section */}
             <Grid container spacing={3}>
                 {/* User Section */}
                 <Grid item xs={12} md={6}>
-                    <Paper elevation={2} sx={{ padding: 3 }}>
-                        <Typography variant="h5" gutterBottom>
+                    <Paper
+                        elevation={2}
+                        sx={{
+                            padding: 3,
+                            backgroundColor: '#e3f2fd', // Light blue
+                            borderRadius: 2,
+                        }}
+                    >
+                        <Typography
+                            variant="h5"
+                            gutterBottom
+                            sx={{ color: '#0d47a1', fontWeight: 'bold' }}
+                        >
                             User Section
                         </Typography>
-                        <Button fullWidth variant="contained" color="primary" onClick={handleViewEvents}>
+                        <Button
+                            fullWidth
+                            variant="contained"
+                            sx={{
+                                backgroundColor: '#0d47a1',
+                                '&:hover': { backgroundColor: '#002171' },
+                            }}
+                            onClick={handleViewEvents}
+                        >
                             View Events
                         </Button>
-                        <Button fullWidth variant="contained" color="secondary" onClick={handleViewGroups} sx={{ marginTop: 1 }}>
+                        <Button
+                            fullWidth
+                            variant="contained"
+                            sx={{
+                                backgroundColor: '#1976d2',
+                                marginTop: 1,
+                                '&:hover': { backgroundColor: '#115293' },
+                            }}
+                            onClick={handleViewGroups}
+                        >
                             View Groups
                         </Button>
-                        <Button fullWidth variant="contained" color="success" onClick={handleViewAttendedEvents} sx={{ marginTop: 1 }}>
+                        <Button
+                            fullWidth
+                            variant="contained"
+                            sx={{
+                                backgroundColor: '#64b5f6',
+                                marginTop: 1,
+                                '&:hover': { backgroundColor: '#42a5f5' },
+                            }}
+                            onClick={handleViewAttendedEvents}
+                        >
                             Joined Events
                         </Button>
                     </Paper>
@@ -101,20 +154,66 @@ function UserPage() {
                 {/* Administrator Section */}
                 {userData.role === 'organizer' && (
                     <Grid item xs={12} md={6}>
-                        <Paper elevation={2} sx={{ padding: 3 }}>
-                            <Typography variant="h5" gutterBottom>
+                        <Paper
+                            elevation={2}
+                            sx={{
+                                padding: 3,
+                                backgroundColor: '#fffde7', // Light yellow
+                                borderRadius: 2,
+                            }}
+                        >
+                            <Typography
+                                variant="h5"
+                                gutterBottom
+                                sx={{ color: '#f57f17', fontWeight: 'bold' }}
+                            >
                                 Administrator Section
                             </Typography>
-                            <Button fullWidth variant="contained" color="primary" onClick={handleCreateEvent}>
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                sx={{
+                                    backgroundColor: '#f57f17',
+                                    '&:hover': { backgroundColor: '#e65100' },
+                                }}
+                                onClick={handleCreateEvent}
+                            >
                                 Create Event
                             </Button>
-                            <Button fullWidth variant="contained" color="secondary" onClick={handleCreateGroup} sx={{ marginTop: 1 }}>
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                sx={{
+                                    backgroundColor: '#ffb300',
+                                    marginTop: 1,
+                                    '&:hover': { backgroundColor: '#ffa000' },
+                                }}
+                                onClick={handleCreateGroup}
+                            >
                                 Create Group of Events
                             </Button>
-                            <Button fullWidth variant="contained" color="info" onClick={handleViewMyEvents} sx={{ marginTop: 1 }}>
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                sx={{
+                                    backgroundColor: '#ffca28',
+                                    marginTop: 1,
+                                    '&:hover': { backgroundColor: '#ffb300' },
+                                }}
+                                onClick={handleViewMyEvents}
+                            >
                                 My Events
                             </Button>
-                            <Button fullWidth variant="contained" color="warning" onClick={handleViewMyGroups} sx={{ marginTop: 1 }}>
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                sx={{
+                                    backgroundColor: '#ffe082',
+                                    marginTop: 1,
+                                    '&:hover': { backgroundColor: '#ffd54f' },
+                                }}
+                                onClick={handleViewMyGroups}
+                            >
                                 My Groups
                             </Button>
                         </Paper>
@@ -123,6 +222,7 @@ function UserPage() {
             </Grid>
         </Box>
     );
+
 }
 
 export default UserPage;

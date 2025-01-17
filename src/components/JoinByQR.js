@@ -70,32 +70,92 @@ export function JoinByQR() {
         );
     }
     return (
-        <Box sx={{ padding: 3, maxWidth: 600, margin: '0 auto' }}>
-            <Typography variant="h4" gutterBottom>
+        <Box
+            sx={{
+                padding: 3,
+                maxWidth: 600,
+                margin: '0 auto',
+                backgroundColor: '#f3f4f6', // Light gray background
+                minHeight: '100vh', // Full viewport height
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+            }}
+        >
+            <Typography
+                variant="h4"
+                gutterBottom
+                sx={{
+                    textAlign: 'center',
+                    color: '#0d47a1', // Deep blue header color
+                    fontWeight: 'bold',
+                }}
+            >
                 Join Event
             </Typography>
 
-            {error && <Alert severity="error">{error}</Alert>}
+            {error && (
+                <Alert severity="error" sx={{ marginBottom: 3 }}>
+                    {error}
+                </Alert>
+            )}
 
             {event && (
-                <Card sx={{ marginTop: 3 }}>
+                <Card
+                    sx={{
+                        marginTop: 3,
+                        padding: 2,
+                        borderRadius: 2, // Rounded corners
+                        boxShadow: 4, // Subtle shadow for card
+                        backgroundColor: '#ffffff', // White card background
+                    }}
+                >
                     <CardContent>
-                        <Typography variant="h5" gutterBottom>
+                        <Typography
+                            variant="h5"
+                            gutterBottom
+                            sx={{
+                                fontWeight: 'bold',
+                                color: '#2e7d32', // Green for event name
+                            }}
+                        >
                             {event.name}
                         </Typography>
-                        <Typography variant="body1" gutterBottom>
+                        <Typography
+                            variant="body1"
+                            gutterBottom
+                            sx={{ marginBottom: 2, color: '#424242' }} // Subtle gray for description
+                        >
                             {event.description}
                         </Typography>
-                        <Typography variant="body2" color="textSecondary">
+                        <Typography
+                            variant="body2"
+                            color="textSecondary"
+                            sx={{ marginBottom: 1 }}
+                        >
                             <strong>Start time:</strong> {new Date(event.start_time).toLocaleString()}
                         </Typography>
-                        <Typography variant="body2" color="textSecondary" gutterBottom>
+                        <Typography
+                            variant="body2"
+                            color="textSecondary"
+                            gutterBottom
+                        >
                             <strong>End time:</strong> {new Date(event.end_time).toLocaleString()}
                         </Typography>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 3 }}>
+
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                marginTop: 3,
+                                gap: 2, // Add space between buttons
+                                flexWrap: 'wrap', // Handle smaller screens
+                            }}
+                        >
                             <Button
                                 variant="contained"
                                 color="primary"
+                                sx={{ flex: 1, minWidth: '30%' }} // Flexible width for buttons
                                 onClick={handleLogin}
                             >
                                 Log in
@@ -103,6 +163,7 @@ export function JoinByQR() {
                             <Button
                                 variant="contained"
                                 color="secondary"
+                                sx={{ flex: 1, minWidth: '30%' }}
                                 onClick={handleRegister}
                             >
                                 Register
@@ -110,6 +171,7 @@ export function JoinByQR() {
                             <Button
                                 variant="outlined"
                                 color="success"
+                                sx={{ flex: 1, minWidth: '30%' }}
                                 onClick={() => setShowGuestInput(true)}
                             >
                                 Join as Guest
@@ -124,11 +186,15 @@ export function JoinByQR() {
                                     fullWidth
                                     value={guestName}
                                     onChange={(e) => setGuestName(e.target.value)}
-                                    sx={{ marginBottom: 2 }}
+                                    sx={{
+                                        marginBottom: 2,
+                                        backgroundColor: '#f9fbe7', // Light yellow input background
+                                    }}
                                 />
                                 <Button
                                     variant="contained"
                                     color="success"
+                                    fullWidth
                                     onClick={handleGuestJoin}
                                 >
                                     Confirm

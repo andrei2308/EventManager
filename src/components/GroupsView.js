@@ -40,28 +40,58 @@ export function GroupsView() {
         );
     }
     return (
-        <Box sx={{ padding: 3 }}>
-            <Typography variant="h4" gutterBottom>
+        <Box
+            sx={{
+                padding: 3,
+                backgroundColor: '#f3f4f6', // Light gray background
+                minHeight: '100vh', // Ensure the page spans the full viewport height
+            }}
+        >
+            <Typography
+                variant="h4"
+                gutterBottom
+                sx={{
+                    textAlign: 'center',
+                    color: '#0d47a1', // Deep blue header color
+                    fontWeight: 'bold',
+                }}
+            >
                 Groups
             </Typography>
             {groups.length > 0 ? (
                 <Grid container spacing={3}>
-                    {groups.map((group) => (
+                    {groups.map((group, index) => (
                         <Grid item xs={12} sm={6} md={4} key={group._id}>
                             <Card
                                 onClick={() => handleGroupClick(group.id)}
                                 sx={{
                                     cursor: 'pointer',
+                                    backgroundColor: index % 2 === 0 ? '#e8f5e9' : '#fffde7', // Alternating colors (light green and yellow)
                                     '&:hover': {
-                                        boxShadow: 4, // Add shadow effect on hover
+                                        boxShadow: 6, // Slightly stronger shadow on hover
                                     },
+                                    borderRadius: 2, // Rounded corners
+                                    padding: 2, // Add padding for better spacing
                                 }}
                             >
                                 <CardContent>
-                                    <Typography variant="h5" gutterBottom>
+                                    <Typography
+                                        variant="h5"
+                                        gutterBottom
+                                        sx={{
+                                            fontWeight: 'bold',
+                                            color: '#2e7d32', // Dark green for titles
+                                        }}
+                                    >
                                         {group.name}
                                     </Typography>
-                                    <Typography variant="body2" color="textSecondary">
+                                    <Typography
+                                        variant="body2"
+                                        color="textSecondary"
+                                        sx={{
+                                            fontSize: '0.9rem',
+                                        }}
+                                    >
                                         {group.description || 'No description available'}
                                     </Typography>
                                 </CardContent>
@@ -70,7 +100,16 @@ export function GroupsView() {
                     ))}
                 </Grid>
             ) : (
-                <Typography variant="body1">No groups found</Typography>
+                <Typography
+                    variant="body1"
+                    sx={{
+                        textAlign: 'center',
+                        color: '#616161', // Muted gray for no groups found message
+                        marginTop: 4,
+                    }}
+                >
+                    No groups found
+                </Typography>
             )}
         </Box>
     );

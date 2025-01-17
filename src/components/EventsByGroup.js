@@ -47,42 +47,77 @@ export function EventsByGroup() {
         );
     }
     return (
-        <Box sx={{ padding: 3 }}>
-            <Typography variant="h4" gutterBottom>
+        <Box
+            sx={{
+                padding: 3,
+                backgroundColor: '#f3f4f6', // Light background for better contrast
+                minHeight: '100vh',
+            }}
+        >
+            <Typography
+                variant="h4"
+                gutterBottom
+                sx={{
+                    color: '#0d47a1', // Deep blue for the header
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    marginBottom: 4,
+                }}
+            >
                 Events
             </Typography>
+
             {events.length > 0 ? (
                 <Grid container spacing={3}>
-                    {events.map((event) => (
+                    {events.map((event, index) => (
                         <Grid item xs={12} sm={6} md={4} key={event._id}>
                             <Card
                                 onClick={() => handleEventClick(event._id)}
                                 sx={{
-                                    cursor: "pointer",
-                                    "&:hover": {
-                                        boxShadow: 4, // Add shadow on hover
+                                    cursor: 'pointer',
+                                    backgroundColor: index % 2 === 0 ? '#e3f2fd' : '#fffde7', // Alternate colors: blue and yellow
+                                    boxShadow: 2,
+                                    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                                    '&:hover': {
+                                        transform: 'scale(1.05)', // Subtle scale-up effect on hover
+                                        boxShadow: 6, // Elevated shadow on hover
                                     },
+                                    borderRadius: 2,
                                 }}
                             >
                                 <CardContent>
-                                    <Typography variant="h5" gutterBottom>
+                                    <Typography
+                                        variant="h5"
+                                        gutterBottom
+                                        sx={{
+                                            color: '#0d47a1', // Dark blue for event name
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
                                         {event.name}
                                     </Typography>
-                                    <Typography variant="body2" color="textSecondary">
+                                    <Typography
+                                        variant="body2"
+                                        color="textSecondary"
+                                        sx={{ marginBottom: 1 }}
+                                    >
                                         <strong>Start:</strong> {new Date(event.start_time).toLocaleString()}
                                     </Typography>
-                                    <Typography variant="body2" color="textSecondary">
+                                    <Typography
+                                        variant="body2"
+                                        color="textSecondary"
+                                        sx={{ marginBottom: 1 }}
+                                    >
                                         <strong>End:</strong> {new Date(event.end_time).toLocaleString()}
                                     </Typography>
                                     <Typography
                                         variant="body1"
                                         sx={{
-                                            color: event.status === "CLOSED" ? "green" : "red",
-                                            fontWeight: "bold",
-                                            marginTop: 1,
+                                            color: event.status === 'CLOSED' ? '#2e7d32' : '#c62828', // Green for closed, red for in-progress
+                                            fontWeight: 'bold',
                                         }}
                                     >
-                                        Status: {event.status === "CLOSED" ? "Not started" : "In progress"}
+                                        Status: {event.status === 'CLOSED' ? 'Not started' : 'In progress'}
                                     </Typography>
                                 </CardContent>
                             </Card>
@@ -90,8 +125,18 @@ export function EventsByGroup() {
                     ))}
                 </Grid>
             ) : (
-                <Typography variant="body1">No events found</Typography>
+                <Typography
+                    variant="body1"
+                    sx={{
+                        textAlign: 'center',
+                        color: '#757575', // Neutral gray for "No events found" message
+                        marginTop: 5,
+                    }}
+                >
+                    No events found
+                </Typography>
             )}
         </Box>
     );
+
 }

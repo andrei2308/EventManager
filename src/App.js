@@ -16,6 +16,8 @@ import { AdminGroups } from './components/AdminGroups.js';
 import { AdminEventsFromGroup } from './components/AdminEventsFromGroup.js';
 import { JoinByQR } from './components/JoinByQR.js';
 import { AttendedEvents } from './components/AttendedEvents.js';
+import { ThemeProvider } from '@emotion/react';
+import theme from './theme';
 import {
   Box,
   Typography,
@@ -196,25 +198,27 @@ function App() {
 function AppRoutes() {
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/EventManager" element={<App />} />
-        <Route path="/user" element={<UserPage />} />
-        <Route path="/events" element={<Events />} />
-        <Route path="/events/create" element={<EventsCreate />} />
-        <Route path="/events/details/:eventId" element={<EventsDetails />} />
-        <Route path="/events/:eventId/participants" element={<EventParticipants />} />
-        <Route path="/groups" element={<CreateGroup />} />
-        <Route path="/groups/view" element={<GroupsView />} />
-        <Route path="/groups/details/:groupId" element={<EventsByGroup />} />
-        <Route path="/events/:userId" element={<AdminEvents />} />
-        <Route path="/events/details/admin/:eventId" element={<AdminEventsDetails />} />
-        <Route path="/groups/:userId" element={<AdminGroups />} />
-        <Route path="/groups/details/admin/:groupId" element={<AdminEventsFromGroup />} />
-        <Route path="/events/:eventId/join" element={<JoinByQR />} />
-        <Route path="/events/attended/:userId" element={<AttendedEvents />} />
-      </Routes>
-    </Router>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <Routes>
+          <Route path="/EventManager" element={<App />} />
+          <Route path="/user" element={<UserPage />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/events/create" element={<EventsCreate />} />
+          <Route path="/events/details/:eventId" element={<EventsDetails />} />
+          <Route path="/events/:eventId/participants" element={<EventParticipants />} />
+          <Route path="/groups" element={<CreateGroup />} />
+          <Route path="/groups/view" element={<GroupsView />} />
+          <Route path="/groups/details/:groupId" element={<EventsByGroup />} />
+          <Route path="/events/:userId" element={<AdminEvents />} />
+          <Route path="/events/details/admin/:eventId" element={<AdminEventsDetails />} />
+          <Route path="/groups/:userId" element={<AdminGroups />} />
+          <Route path="/groups/details/admin/:groupId" element={<AdminEventsFromGroup />} />
+          <Route path="/events/:eventId/join" element={<JoinByQR />} />
+          <Route path="/events/attended/:userId" element={<AttendedEvents />} />
+        </Routes>
+      </Router>
+    </ThemeProvider>
   );
 }
 

@@ -116,28 +116,58 @@ export function AdminGroups() {
         );
     }
     return (
-        <Box sx={{ padding: 3 }}>
-            <Typography variant="h4" gutterBottom>
+        <Box
+            sx={{
+                padding: 3,
+                backgroundColor: '#f0f4f8', // Light background for the container
+                minHeight: '100vh', // Full height background
+            }}
+        >
+            <Typography
+                variant="h4"
+                gutterBottom
+                sx={{
+                    color: '#3f51b5', // Deep blue for heading
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                }}
+            >
                 Groups
             </Typography>
             {groups.length > 0 ? (
                 <Grid container spacing={3}>
-                    {groups.map((group) => (
+                    {groups.map((group, index) => (
                         <Grid item xs={12} sm={6} md={4} key={group._id}>
                             <Card
                                 onClick={() => navigate(`/groups/details/admin/${group.id}`)}
                                 sx={{
-                                    cursor: "pointer",
-                                    "&:hover": {
-                                        boxShadow: 4,
+                                    cursor: 'pointer',
+                                    backgroundColor: index % 2 === 0 ? '#e8f5e9' : '#fff3e0', // Alternating green and orange
+                                    '&:hover': {
+                                        boxShadow: 6, // Hover shadow effect
+                                        backgroundColor: index % 2 === 0 ? '#c8e6c9' : '#ffe0b2', // Slightly darker hover color
                                     },
+                                    borderRadius: 2, // Rounded corners
+                                    transition: 'all 0.3s ease-in-out', // Smooth hover transition
                                 }}
                             >
                                 <CardContent>
-                                    <Typography variant="h5" gutterBottom>
+                                    <Typography
+                                        variant="h5"
+                                        gutterBottom
+                                        sx={{
+                                            color: '#1a237e', // Deep indigo for titles
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
                                         {group.name}
                                     </Typography>
-                                    <Typography variant="body2" color="textSecondary">
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            color: '#616161', // Neutral gray for description
+                                        }}
+                                    >
                                         {group.description}
                                     </Typography>
                                 </CardContent>
@@ -146,13 +176,49 @@ export function AdminGroups() {
                     ))}
                 </Grid>
             ) : (
-                <Typography variant="body1">No groups found</Typography>
+                <Typography
+                    variant="body1"
+                    sx={{
+                        textAlign: 'center',
+                        color: '#757575',
+                        marginTop: 5,
+                    }}
+                >
+                    No groups found
+                </Typography>
             )}
-            <Box sx={{ marginTop: 3, display: "flex", gap: 2 }}>
-                <Button variant="contained" color="primary" onClick={handleExportParticipants}>
+            <Box
+                sx={{
+                    marginTop: 3,
+                    display: 'flex',
+                    justifyContent: 'center', // Center the buttons
+                    gap: 2, // Add spacing between buttons
+                }}
+            >
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleExportParticipants}
+                    sx={{
+                        backgroundColor: '#4caf50',
+                        '&:hover': {
+                            backgroundColor: '#43a047', // Darker green on hover
+                        },
+                    }}
+                >
                     Export Participants (CSV)
                 </Button>
-                <Button variant="contained" color="secondary" onClick={handleExportParticipantsXlsx}>
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleExportParticipantsXlsx}
+                    sx={{
+                        backgroundColor: '#ff9800',
+                        '&:hover': {
+                            backgroundColor: '#fb8c00', // Darker orange on hover
+                        },
+                    }}
+                >
                     Export Participants (XLSX)
                 </Button>
             </Box>

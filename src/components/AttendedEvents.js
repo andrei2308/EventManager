@@ -39,33 +39,76 @@ export function AttendedEvents() {
         );
     }
     return (
-        <Box sx={{ padding: 3 }}>
-            <Typography variant="h4" gutterBottom>
+        <Box
+            sx={{
+                padding: 3,
+                backgroundColor: '#f7faff', // Light blue background
+                minHeight: '100vh', // Full viewport height
+            }}
+        >
+            <Typography
+                variant="h4"
+                gutterBottom
+                sx={{
+                    color: '#1976d2', // Deep blue for the title
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                }}
+            >
                 Attended Events
             </Typography>
             {events.length > 0 ? (
                 <Grid container spacing={3}>
-                    {events.map((event) => (
+                    {events.map((event, index) => (
                         <Grid item xs={12} sm={6} md={4} key={event._id}>
                             <Card
                                 sx={{
+                                    backgroundColor: index % 2 === 0 ? '#e3f2fd' : '#fffde7', // Alternating light blue and yellow
                                     boxShadow: 2,
-                                    "&:hover": {
-                                        boxShadow: 4, // Add subtle hover effect without making it clickable
+                                    '&:hover': {
+                                        boxShadow: 6, // Subtle hover effect
                                     },
+                                    borderRadius: 2, // Rounded corners
+                                    transition: 'all 0.3s ease-in-out', // Smooth transition on hover
                                 }}
                             >
                                 <CardContent>
-                                    <Typography variant="h5" gutterBottom>
+                                    <Typography
+                                        variant="h5"
+                                        gutterBottom
+                                        sx={{
+                                            color: '#0d47a1', // Dark blue for event names
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
                                         {event.name}
                                     </Typography>
-                                    <Typography variant="body2" color="textSecondary">
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            color: '#616161', // Neutral gray for description
+                                        }}
+                                    >
                                         {event.description}
                                     </Typography>
-                                    <Typography variant="body2" color="textSecondary">
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            color: '#1b5e20', // Green for start time
+                                            fontWeight: 'bold',
+                                            marginTop: 1,
+                                        }}
+                                    >
                                         <strong>Start:</strong> {new Date(event.start_time).toLocaleString()}
                                     </Typography>
-                                    <Typography variant="body2" color="textSecondary">
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            color: '#b71c1c', // Red for end time
+                                            fontWeight: 'bold',
+                                            marginTop: 1,
+                                        }}
+                                    >
                                         <strong>End:</strong> {new Date(event.end_time).toLocaleString()}
                                     </Typography>
                                 </CardContent>
@@ -74,8 +117,18 @@ export function AttendedEvents() {
                     ))}
                 </Grid>
             ) : (
-                <Typography variant="body1">No attended events found</Typography>
+                <Typography
+                    variant="body1"
+                    sx={{
+                        textAlign: 'center',
+                        color: '#757575', // Neutral gray for "No events" message
+                        marginTop: 5,
+                    }}
+                >
+                    No attended events found
+                </Typography>
             )}
         </Box>
     );
+
 }
