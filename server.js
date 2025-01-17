@@ -142,9 +142,6 @@ app.post('/register', async (req, res) => {
         const newUser = new User({ username, password: hashedPassword, email, role: "participant", organizedEvents: [], participatedEvents: [] });
         await newUser.save();
 
-        const adminUser = new User({ username: 'root', password: await bcrypt.hash('root', 10), email: 'root@localhost', role: 'organizer', organizedEvents: [], participatedEvents: [] });
-        await adminUser.save();
-
         res.status(201).json({ message: 'Registration successful!' });
     } catch (error) {
         res.status(500).json({ message: 'Server error during registration: ' + error.message });
