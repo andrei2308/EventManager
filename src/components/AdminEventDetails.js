@@ -116,9 +116,6 @@ export function AdminEventsDetails() {
                             alignItems="center"
                             sx={{ marginTop: 3 }}
                         >
-                            <Button variant="contained" color="primary" onClick={handleClickEdit}>
-                                Edit Event
-                            </Button>
                             <Button
                                 variant="contained"
                                 color="secondary"
