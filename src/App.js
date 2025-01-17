@@ -16,13 +16,22 @@ import { AdminGroups } from './components/AdminGroups.js';
 import { AdminEventsFromGroup } from './components/AdminEventsFromGroup.js';
 import { JoinByQR } from './components/JoinByQR.js';
 import { AttendedEvents } from './components/AttendedEvents.js';
-import { Button, Input, FormGroup } from "@mui/material"
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  CircularProgress,
+  Link,
+} from '@mui/material';
 function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   useEffect(() => {
@@ -39,11 +48,13 @@ function App() {
     }
     if (eventId && action === 'register') {
       localStorage.setItem('eventId', eventId);
+      setIsLogin(false);
       navigate('/EventManager');
     }
   }, [navigate]);
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const response = await axios.post(`https://eventmanager-1-l2dr.onrender.com/login`, { username, password });
       setMessage('Login successful!');
@@ -66,6 +77,8 @@ function App() {
           navigate(`/user`);
         } catch (joinError) {
           setMessage('Failed to join event: ' + (joinError.response?.data.message || joinError.message));
+          alert('Failed to join event: ' + (joinError.response?.data.message || joinError.message) + ', redirecting to user dashboard');
+          navigate(`/user`);
         }
       } else {
         // Redirect to the user dashboard if no eventId is present
@@ -73,56 +86,108 @@ function App() {
       }
     } catch (error) {
       setMessage('Login failed. ' + (error.response?.data.message || error.message));
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       await axios.post(`https://eventmanager-1-l2dr.onrender.com/register`, { username, password, email });
       setMessage('Registration successful! Please login.');
       setIsLogin(true);
     } catch (error) {
       setMessage('Registration failed. ' + (error.response?.data.message || error.message));
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="App">
-      <h1>{isLogin ? 'Login' : 'Register'}</h1>
-      <form onSubmit={isLogin ? handleLogin : handleRegister}>
-        {!isLogin && (
-          <Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        backgroundColor: '#f5f5f5',
+      }}
+    >
+      <Paper
+        sx={{
+          padding: 4,
+          maxWidth: 400,
+          width: '100%',
+          textAlign: 'center',
+        }}
+        elevation={3}
+      >
+        <Typography variant="h4" gutterBottom>
+          {isLogin ? 'Login' : 'Register'}
+        </Typography>
+        <form onSubmit={isLogin ? handleLogin : handleRegister}>
+          {!isLogin && (
+            <TextField
+              fullWidth
+              label="Email"
+              variant="outlined"
+              margin="normal"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          )}
+          <TextField
+            fullWidth
+            label="Username"
+            variant="outlined"
+            margin="normal"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             required
           />
+          <TextField
+            fullWidth
+            label="Password"
+            variant="outlined"
+            margin="normal"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            sx={{ marginTop: 2 }}
+            type="submit"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <CircularProgress size={24} sx={{ color: '#fff' }} />
+            ) : (
+              isLogin ? 'Login' : 'Register'
+            )}
+          </Button>
+        </form>
+        <Typography
+          variant="body2"
+          sx={{ marginTop: 2, cursor: 'pointer', color: 'blue' }}
+          onClick={() => setIsLogin(!isLogin)}
+        >
+          Switch to {isLogin ? 'Register' : 'Login'}
+        </Typography>
+        {message && (
+          <Typography variant="body2" sx={{ marginTop: 2, color: 'red' }}>
+            {message}
+          </Typography>
         )}
-        <Input
-          style={{ marginTop: '20px' }}
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-        <Input
-          style={{ marginTop: '20px' }}
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <Button variant="contained" color="primary" style={{ marginTop: '20px' }} type="submit">{isLogin ? 'Login' : 'Register'}</Button>
-      </form>
-      <p>{message}</p>
-      <Button variant="contained" color="primary" style={{ marginTop: '20px' }} onClick={() => setIsLogin(!isLogin)}>
-        Switch to {isLogin ? 'Register' : 'Login'}
-      </Button>
-    </div>
+      </Paper>
+    </Box>
   );
 }
 

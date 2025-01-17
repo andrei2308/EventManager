@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react';
 import axiosInstance from '../axiosConfiguration';
 import { useParams, useNavigate } from 'react-router-dom';
+import {
+    Box,
+    Typography,
+    Button,
+    TextField,
+    Card,
+    CardContent,
+    CircularProgress,
+    Alert,
+} from '@mui/material';
 
 export function JoinByQR() {
     const { eventId } = useParams();
@@ -8,6 +18,7 @@ export function JoinByQR() {
     const [error, setError] = useState('');
     const [showGuestInput, setShowGuestInput] = useState(false);
     const [guestName, setGuestName] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
     const redirect = useNavigate();
 
     useEffect(() => {
@@ -16,9 +27,11 @@ export function JoinByQR() {
             .get(`https://eventmanager-1-l2dr.onrender.com/events/${eventId}/join`)
             .then((response) => {
                 setEvent(response.data.event);
+                setIsLoading(false);
             })
             .catch((err) => {
                 setError('Failed to fetch event details: ' + (err.response?.data.message || err.message));
+                setIsLoading(false);
             });
     }, [eventId]);
 
@@ -49,32 +62,82 @@ export function JoinByQR() {
             });
     };
 
+    if (isLoading) {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <CircularProgress />
+            </Box>
+        );
+    }
     return (
-        <div>
-            <h2>Join Event</h2>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+        <Box sx={{ padding: 3, maxWidth: 600, margin: '0 auto' }}>
+            <Typography variant="h4" gutterBottom>
+                Join Event
+            </Typography>
+
+            {error && <Alert severity="error">{error}</Alert>}
+
             {event && (
-                <div>
-                    <p>Name: {event.name}</p>
-                    <p>Description: {event.description}</p>
-                    <p>Start time: {new Date(event.start_time).toLocaleString()}</p>
-                    <p>End time: {new Date(event.end_time).toLocaleString()}</p>
-                    <button onClick={handleLogin}>Log in</button>
-                    <button onClick={handleRegister}>Register</button>
-                    <button onClick={() => setShowGuestInput(true)}>Join as Guest</button>
-                    {showGuestInput && (
-                        <div>
-                            <input
-                                type="text"
-                                placeholder="Enter your name"
-                                value={guestName}
-                                onChange={(e) => setGuestName(e.target.value)}
-                            />
-                            <button onClick={handleGuestJoin}>Confirm</button>
-                        </div>
-                    )}
-                </div>
+                <Card sx={{ marginTop: 3 }}>
+                    <CardContent>
+                        <Typography variant="h5" gutterBottom>
+                            {event.name}
+                        </Typography>
+                        <Typography variant="body1" gutterBottom>
+                            {event.description}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                            <strong>Start time:</strong> {new Date(event.start_time).toLocaleString()}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary" gutterBottom>
+                            <strong>End time:</strong> {new Date(event.end_time).toLocaleString()}
+                        </Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 3 }}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleLogin}
+                            >
+                                Log in
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={handleRegister}
+                            >
+                                Register
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                color="success"
+                                onClick={() => setShowGuestInput(true)}
+                            >
+                                Join as Guest
+                            </Button>
+                        </Box>
+
+                        {showGuestInput && (
+                            <Box sx={{ marginTop: 3 }}>
+                                <TextField
+                                    label="Enter your name"
+                                    variant="outlined"
+                                    fullWidth
+                                    value={guestName}
+                                    onChange={(e) => setGuestName(e.target.value)}
+                                    sx={{ marginBottom: 2 }}
+                                />
+                                <Button
+                                    variant="contained"
+                                    color="success"
+                                    onClick={handleGuestJoin}
+                                >
+                                    Confirm
+                                </Button>
+                            </Box>
+                        )}
+                    </CardContent>
+                </Card>
             )}
-        </div>
+        </Box>
     );
 }
