@@ -382,3 +382,109 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+
+  /events/attended/{userId}:
+    get:
+      summary: Get attended events for a specific user
+      description: Fetches a list of events that the specified user has attended.
+      operationId: getAttendedEvents
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: ID of the user whose attended events are to be fetched.
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          required: true
+          description: Bearer token for authentication.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved attended events.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Attended events found
+                  events:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          description: Unique identifier of the event.
+                          example: 61e3f8eaa4b2b5d834b9d4f1
+                        name:
+                          type: string
+                          description: Name of the event.
+                          example: Marathon 2023
+                        description:
+                          type: string
+                          description: Detailed description of the event.
+                          example: Annual city marathon.
+                        start_time:
+                          type: string
+                          format: date-time
+                          description: Event start time.
+                          example: 2025-03-10T09:00:00Z
+                        end_time:
+                          type: string
+                          format: date-time
+                          description: Event end time.
+                          example: 2025-03-10T18:00:00Z
+                        participants:
+                          type: array
+                          description: List of participants in the event.
+                          items:
+                            type: object
+                            properties:
+                              userId:
+                                type: string
+                                description: ID of the user who participated.
+                                example: 61e3f8eaa4b2b5d834b9d4f2
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User not found
+        '401':
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized access
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Server error fetching attended events: Internal Server Error
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - BearerAuth: []
