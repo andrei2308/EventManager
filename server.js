@@ -172,13 +172,14 @@ app.get('/user', authenticateToken, async (req, res) => {
 app.get('/events', authenticateToken, (req, res) => {
     const userId = req.user.id;
     console.log(req);
-    // Find events where the organizer is NOT the current user
-    Event.find({ organizer: { $ne: userId } })
+    // Find events where the organizer is NOT the current user and he is not attended
+    Event.find({ organizer: { $ne: userId }, participants: { $not: { $elemMatch: { userId } } } })
         .then((events) => {
             res.json({ message: 'Events found', events });
         })
         .catch((error) => {
             res.status(500).json({ message: 'Server error fetching events: ' + error.message });
+
         });
 });
 
@@ -368,8 +369,12 @@ app.get('/groups', authenticateToken, async (req, res) => {
 });
 app.get("/groups/details/:groupId", authenticateToken, async (req, res) => {
     const { groupId } = req.params;
+    const userId = req.user.id;
     try {
-        const events = await Event.find({ group: groupId });
+        const events = await Event.find({
+            group: groupId,
+            participants: { $not: { $elemMatch: { userId } } }
+        });
         if (!events) {
             return res.status(404).json({ message: 'Events not found' });
         }

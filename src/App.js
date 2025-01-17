@@ -74,6 +74,7 @@ function App() {
           });
           setMessage(`Successfully joined event ${eventId}`);
           localStorage.removeItem('eventId');
+          alert('Successfully joined event, redirecting to user dashboard');
           navigate(`/user`);
         } catch (joinError) {
           setMessage('Failed to join event: ' + (joinError.response?.data.message || joinError.message));
