@@ -148,16 +148,16 @@ export function AdminEventsDetails() {
                             gutterBottom
                             sx={{
                                 fontWeight: 'bold',
-                                color: event.status === 'CLOSED' ? '#d32f2f' : '#388e3c', // Red for CLOSED, green for OPEN
+                                color: event.status === 'OPEN' ? '#d32f2f' : '#388e3c', // Red for CLOSED, green for OPEN
                                 backgroundColor:
-                                    event.status === 'CLOSED' ? '#ffebee' : '#e8f5e9', // Light red/green background
+                                    event.status === 'OPEN' ? '#ffebee' : '#e8f5e9', // Light red/green background
                                 padding: '4px 8px',
                                 borderRadius: 2,
                                 display: 'inline-block',
                                 textAlign: 'center',
                             }}
                         >
-                            Status: {event.status}
+                            Status: {event.status === 'OPEN' ? 'In progress' : 'Not started'}
                         </Typography>
                         <Box
                             sx={{

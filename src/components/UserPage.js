@@ -104,10 +104,7 @@ function UserPage() {
                     Welcome, {userData.username}!
                 </Typography>
                 <Typography variant="body1" sx={{ color: '#424242' }}>
-                    Email: {userData.email}
-                </Typography>
-                <Typography variant="body1" sx={{ color: '#424242' }}>
-                    User ID: {userData._id}
+                    email: {userData.email}
                 </Typography>
             </Paper>
 
