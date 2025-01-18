@@ -27,7 +27,13 @@ const app = express();
 /**
  * Middleware setup.
  */
-app.use(cors());
+const corsOptions = {
+    origin: 'https://andrei2308.github.io',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.use(cors(corsOptions));
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(helmet({
