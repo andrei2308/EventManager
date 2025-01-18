@@ -142,7 +142,7 @@ export function AdminGroups() {
                     {groups.map((group, index) => (
                         <Grid item xs={12} sm={6} md={4} key={group._id}>
                             <Card
-                                onClick={() => navigate(`/groups/details/admin/${group.id}`)}
+                                onClick={() => navigate(`/groups/details/admin/${group.id}`, { replace: true })}
                                 sx={{
                                     cursor: 'pointer',
                                     backgroundColor: index % 2 === 0 ? '#e3f2fd' : '#ffffff', // Alternating light blue and white
@@ -190,7 +190,8 @@ export function AdminGroups() {
                 >
                     No groups found
                 </Typography>
-            )}
+            )
+            }
             <Box
                 sx={{
                     marginTop: 3,
@@ -226,6 +227,6 @@ export function AdminGroups() {
                     Export Participants (XLSX)
                 </Button>
             </Box>
-        </Box>
+        </Box >
     );
 }

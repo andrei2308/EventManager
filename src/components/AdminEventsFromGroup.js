@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../axiosConfiguration";
-import { useNavigate } from "react-router-dom";
+import { replace, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { Grid, Card, CardContent, Typography, Box, CircularProgress } from "@mui/material";
 export function AdminEventsFromGroup() {
@@ -64,7 +64,7 @@ export function AdminEventsFromGroup() {
                     {events.map((event, index) => (
                         <Grid item xs={12} sm={6} md={4} key={event._id}>
                             <Card
-                                onClick={() => navigate(`/events/details/admin/${event._id}`)}
+                                onClick={() => navigate(`/events/details/admin/${event._id}`, { replace: true })}
                                 sx={{
                                     cursor: 'pointer',
                                     backgroundColor: '#ffffff', // White card background
@@ -137,7 +137,8 @@ export function AdminEventsFromGroup() {
                 >
                     No events found
                 </Typography>
-            )}
-        </Box>
+            )
+            }
+        </Box >
     );
 }
