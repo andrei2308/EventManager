@@ -60,7 +60,6 @@ function App() {
     try {
       const response = await axios.post(`https://eventmanager-1-l2dr.onrender.com/login`, { username, password });
       setMessage('Login successful!');
-      console.log("Token", response.data.token);
 
       // Store the token in localStorage
       localStorage.setItem('token', response.data.token);

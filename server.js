@@ -185,7 +185,6 @@ app.get('/user', authenticateToken, async (req, res) => {
  */
 app.get('/events', authenticateToken, (req, res) => {
     const userId = req.user.id;
-    console.log(req);
     // Find events where the organizer is NOT the current user and he is not attended
     Event.find({ organizer: { $ne: userId }, participants: { $not: { $elemMatch: { userId } } } })
         .then((events) => {
@@ -208,8 +207,7 @@ app.post('/events', authenticateToken, async (req, res) => {
         await newEvent.save();
         //get event id 
         const eventId = newEvent._id;
-        //return event id
-        console.log(eventId);
+
         res.json({ message: 'Event created successfully. Your event id is: ' + eventId, eventId });
     } else {
         const newEvent = new Event({ name, description, start_time, end_time, access_code, group, organizer: req.user.id });
@@ -375,7 +373,6 @@ app.get('/groups', authenticateToken, async (req, res) => {
     EventGroup.find({ organizer: { $ne: userID } })
         .then((groups) => {
             res.json({ message: 'Groups found', groups });
-            console.log(groups);
         })
         .catch((error) => {
             res.status(500).json({ message: 'Server error fetching groups: ' + error.message });
@@ -414,12 +411,10 @@ app.get('/events/admin/:userId', authenticateToken, async (req, res) => {
     const { userId } = req.params;
     try {
         const user = await User.findById(userId);
-        console.log(user);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
         const events = await Event.find({ organizer: userId });
-        console.log(events);
         res.json({ message: 'Events found', events });
     } catch (error) {
         res.status(500).json({ message: 'Server error fetching user events: ' + error.message });
@@ -428,7 +423,6 @@ app.get('/events/admin/:userId', authenticateToken, async (req, res) => {
 );
 app.get('/events/details/admin/:eventId', authenticateToken, async (req, res) => {
     const { eventId } = req.params;
-    console.log(eventId);
     try {
         const event = await Event.findById(eventId);
         if (!event) {
@@ -463,8 +457,6 @@ app.get('/groups/admin/export/participants/:userId', authenticateToken, async (r
         const events = await Event.find({ group: { $in: groupIds } });
         const participants = events.map(event => event.participants).flat();
         const users = await User.find({ _id: { $in: participants.map(p => p.userId) } }, 'username email');
-        console.log(users);
-        console.log("participants", participants);
         res.json({ message: 'Participants found', users });
     } catch (error) {
         res.status(500).json({ message: 'Server error fetching participants: ' + error.message });
