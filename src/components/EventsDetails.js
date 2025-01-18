@@ -12,7 +12,7 @@ export function EventsDetails() {
     const [isLoading, setIsLoading] = useState(true);
     const redirect = useNavigate();
     const userID = JSON.parse(localStorage.getItem('userID'));
-    console.log('hit');
+
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -45,7 +45,6 @@ export function EventsDetails() {
             }
             try {
                 // Logic to join event (e.g., API call)
-                console.log('Successfully joined event!');
                 await axiosInstance.post(`https://eventmanager-1-l2dr.onrender.com/events/${eventId}/join`);
                 redirect('/events');
             } catch (err) {

@@ -47,7 +47,6 @@ export function EventParticipants() {
         }
         axiosInstance.get(`https://eventmanager-1-l2dr.onrender.com/groups/admin/export/participants/${userId}`)
             .then((response) => {
-                console.log(response.data);
 
                 // Extract usernames from the response data
                 const usernames = response.data.users.map(user => user.username);
@@ -75,7 +74,6 @@ export function EventParticipants() {
         }
         axiosInstance.get(`https://eventmanager-1-l2dr.onrender.com/groups/admin/export/participants/${userId}`)
             .then((response) => {
-                console.log(response.data);
 
                 // Extract usernames from the response data
                 const usernames = response.data.users.map(user => user.username);
