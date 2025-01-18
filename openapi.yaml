@@ -395,7 +395,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Successfully retrieved attended events.
           content:
             application/json:
@@ -442,7 +442,7 @@ paths:
                                 type: string
                                 description: ID of the user who participated.
                                 example: 61e3f8eaa4b2b5d834b9d4f2
-        '404':
+        "404":
           description: User not found.
           content:
             application/json:
@@ -452,7 +452,7 @@ paths:
                   message:
                     type: string
                     example: User not found
-        '401':
+        "401":
           description: Unauthorized.
           content:
             application/json:
@@ -462,7 +462,7 @@ paths:
                   message:
                     type: string
                     example: Unauthorized access
-        '500':
+        "500":
           description: Internal server error.
           content:
             application/json:
