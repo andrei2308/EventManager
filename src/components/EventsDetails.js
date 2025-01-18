@@ -163,10 +163,10 @@ export function EventsDetails() {
                             sx={{
                                 fontSize: '1rem',
                                 fontWeight: 'bold',
-                                color: event.status === 'CLOSED' ? '#d32f2f' : '#388e3c', // Red for CLOSED, Green otherwise
+                                color: event.status === 'OPEN' ? '#d32f2f' : '#388e3c', // Red for CLOSED, Green otherwise
                             }}
                         >
-                            <strong>Status:</strong> {event.status}
+                            <strong>Status:</strong> {event.status === 'CLOSED' ? 'Not started' : 'In progress'}
                         </Typography>
 
                         <Box
@@ -177,36 +177,57 @@ export function EventsDetails() {
                                 gap: 2,
                             }}
                         >
-                            <TextField
-                                label="Enter Access Code"
-                                variant="outlined"
-                                fullWidth
-                                value={enteredCode}
-                                onChange={(e) => setEnteredCode(e.target.value)}
-                                error={!!error && error.includes('Invalid access code')}
-                                helperText={error.includes('Invalid access code') ? error : ''}
-                                sx={{
-                                    backgroundColor: '#f9f9f9', // Light gray text field background
-                                    borderRadius: 1,
-                                }}
-                            />
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleJoinEvent}
-                                sx={{
-                                    padding: 1.5,
-                                    fontSize: '1rem',
-                                    fontWeight: 'bold',
-                                    textTransform: 'none',
-                                    backgroundColor: '#0d47a1',
-                                    '&:hover': {
-                                        backgroundColor: '#0b3c8b', // Darker shade on hover
-                                    },
-                                }}
-                            >
-                                Join Event
-                            </Button>
+                            {event.status === 'CLOSED' && (
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 2,
+                                    }}
+                                >
+                                    <Typography
+                                        variant="h5"
+                                        gutterBottom
+                                        sx={{
+                                            color: '#0d47a1', // Dark blue for title
+                                            fontWeight: 'bold',
+                                            textAlign: 'center',
+                                        }}
+                                    >
+                                        Join Event
+                                    </Typography>
+                                    <TextField
+                                        label="Enter Access Code"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={enteredCode}
+                                        onChange={(e) => setEnteredCode(e.target.value)}
+                                        error={!!error && error.includes('Invalid access code')}
+                                        helperText={error.includes('Invalid access code') ? error : ''}
+                                        sx={{
+                                            backgroundColor: '#f9f9f9', // Light gray text field background
+                                            borderRadius: 1,
+                                        }}
+                                    />
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={handleJoinEvent}
+                                        sx={{
+                                            padding: 1.5,
+                                            fontSize: '1rem',
+                                            fontWeight: 'bold',
+                                            textTransform: 'none',
+                                            backgroundColor: '#0d47a1',
+                                            '&:hover': {
+                                                backgroundColor: '#0b3c8b', // Darker shade on hover
+                                            },
+                                        }}
+                                    >
+                                        Join Event
+                                    </Button>
+                                </Box>
+                            )}
                         </Box>
                     </CardContent>
                 </Card>

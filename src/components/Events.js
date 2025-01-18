@@ -113,8 +113,8 @@ export function Events() {
                                     <Typography
                                         variant="body1"
                                         sx={{
-                                            color: event.status === 'CLOSED' ? '#d32f2f' : '#388e3c', // Red for closed, green for in progress
-                                            backgroundColor: event.status === 'CLOSED' ? '#ffebee' : '#e8f5e9', // Light red/green background
+                                            color: event.status === 'OPEN' ? '#d32f2f' : '#388e3c', // Red for closed, green for in progress
+                                            backgroundColor: event.status === 'OPEN' ? '#ffebee' : '#e8f5e9', // Light red/green background
                                             fontWeight: 'bold',
                                             padding: '4px 8px',
                                             borderRadius: 2,
