@@ -27,8 +27,19 @@ const app = express();
 /**
  * Middleware setup.
  */
+const allowedOrigins = [
+    'http://localhost:8080', // Local development
+    'https://andrei2308.github.io', // Production domain
+];
+
 const corsOptions = {
-    origin: 'https://andrei2308.github.io',
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true); // Allow the request
+        } else {
+            callback(new Error('Not allowed by CORS')); // Reject the request
+        }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 };
