@@ -81,6 +81,7 @@ function App() {
         } catch (joinError) {
           setMessage('Failed to join event: ' + (joinError.response?.data.message || joinError.message));
           alert('Failed to join event: ' + (joinError.response?.data.message || joinError.message) + ', redirecting to user dashboard');
+          localStorage.removeItem('eventId');
           navigate(`/user`);
         }
       } else {
