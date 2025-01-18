@@ -284,6 +284,10 @@ app.post('/events/:eventId/join', authenticateToken, async (req, res) => {
         if (isAlreadyJoined) {
             return res.status(400).json({ message: 'User already joined' });
         }
+        // Check if the event is open
+        if (event.status === "OPEN") {
+            return res.status(400).json({ message: 'Event is already in progress' });
+        }
 
         // Add the user to the participants array
         event.participants.push({
