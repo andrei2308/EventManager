@@ -50,8 +50,8 @@ export function EventsByGroup() {
         <Box
             sx={{
                 padding: 3,
-                backgroundColor: '#f3f4f6', // Light background for better contrast
-                minHeight: '100vh',
+                backgroundColor: '#f7faff', // Subtle light blue background
+                minHeight: '100vh', // Full viewport height
             }}
         >
             <Typography
@@ -75,7 +75,7 @@ export function EventsByGroup() {
                                 onClick={() => handleEventClick(event._id)}
                                 sx={{
                                     cursor: 'pointer',
-                                    backgroundColor: index % 2 === 0 ? '#e3f2fd' : '#fffde7', // Alternate colors: blue and yellow
+                                    backgroundColor: index % 2 === 0 ? '#e3f2fd' : '#fffde7', // Alternate colors: light blue and light yellow
                                     boxShadow: 2,
                                     transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                                     '&:hover': {
@@ -83,6 +83,7 @@ export function EventsByGroup() {
                                         boxShadow: 6, // Elevated shadow on hover
                                     },
                                     borderRadius: 2,
+                                    padding: 2, // Add padding for a more spacious look
                                 }}
                             >
                                 <CardContent>
@@ -98,15 +99,19 @@ export function EventsByGroup() {
                                     </Typography>
                                     <Typography
                                         variant="body2"
-                                        color="textSecondary"
-                                        sx={{ marginBottom: 1 }}
+                                        sx={{
+                                            color: '#616161', // Neutral gray for metadata
+                                            marginBottom: 1,
+                                        }}
                                     >
                                         <strong>Start:</strong> {new Date(event.start_time).toLocaleString()}
                                     </Typography>
                                     <Typography
                                         variant="body2"
-                                        color="textSecondary"
-                                        sx={{ marginBottom: 1 }}
+                                        sx={{
+                                            color: '#616161', // Neutral gray for metadata
+                                            marginBottom: 1,
+                                        }}
                                     >
                                         <strong>End:</strong> {new Date(event.end_time).toLocaleString()}
                                     </Typography>
@@ -138,5 +143,4 @@ export function EventsByGroup() {
             )}
         </Box>
     );
-
 }

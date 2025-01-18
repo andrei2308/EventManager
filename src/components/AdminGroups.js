@@ -119,7 +119,7 @@ export function AdminGroups() {
         <Box
             sx={{
                 padding: 3,
-                backgroundColor: '#f0f4f8', // Light background for the container
+                backgroundColor: '#f5f7fa', // Light blue background for the container
                 minHeight: '100vh', // Full height background
             }}
         >
@@ -127,9 +127,12 @@ export function AdminGroups() {
                 variant="h4"
                 gutterBottom
                 sx={{
-                    color: '#3f51b5', // Deep blue for heading
+                    color: '#1e88e5', // Blue for heading
                     fontWeight: 'bold',
                     textAlign: 'center',
+                    borderBottom: '2px solid #1e88e5', // Underline for heading
+                    paddingBottom: 1,
+                    marginBottom: 3,
                 }}
             >
                 Groups
@@ -142,12 +145,13 @@ export function AdminGroups() {
                                 onClick={() => navigate(`/groups/details/admin/${group.id}`)}
                                 sx={{
                                     cursor: 'pointer',
-                                    backgroundColor: index % 2 === 0 ? '#e8f5e9' : '#fff3e0', // Alternating green and orange
+                                    backgroundColor: index % 2 === 0 ? '#e3f2fd' : '#ffffff', // Alternating light blue and white
+                                    border: '1px solid #90caf9', // Subtle blue border
                                     '&:hover': {
-                                        boxShadow: 6, // Hover shadow effect
-                                        backgroundColor: index % 2 === 0 ? '#c8e6c9' : '#ffe0b2', // Slightly darker hover color
+                                        boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.1)', // Subtle hover shadow
+                                        backgroundColor: index % 2 === 0 ? '#bbdefb' : '#f5f7fa', // Slightly darker hover shade
                                     },
-                                    borderRadius: 2, // Rounded corners
+                                    borderRadius: 4, // Rounded corners
                                     transition: 'all 0.3s ease-in-out', // Smooth hover transition
                                 }}
                             >
@@ -156,7 +160,7 @@ export function AdminGroups() {
                                         variant="h5"
                                         gutterBottom
                                         sx={{
-                                            color: '#1a237e', // Deep indigo for titles
+                                            color: '#1565c0', // Dark blue for title
                                             fontWeight: 'bold',
                                         }}
                                     >
@@ -165,10 +169,10 @@ export function AdminGroups() {
                                     <Typography
                                         variant="body2"
                                         sx={{
-                                            color: '#616161', // Neutral gray for description
+                                            color: '#424242', // Neutral gray for description
                                         }}
                                     >
-                                        {group.description}
+                                        {group.description || 'No description available'}
                                     </Typography>
                                 </CardContent>
                             </Card>
@@ -180,7 +184,7 @@ export function AdminGroups() {
                     variant="body1"
                     sx={{
                         textAlign: 'center',
-                        color: '#757575',
+                        color: '#757575', // Subtle gray for "No groups found"
                         marginTop: 5,
                     }}
                 >
@@ -197,27 +201,27 @@ export function AdminGroups() {
             >
                 <Button
                     variant="contained"
-                    color="primary"
-                    onClick={handleExportParticipants}
                     sx={{
-                        backgroundColor: '#4caf50',
+                        backgroundColor: '#1e88e5', // Blue button color
+                        color: '#ffffff',
                         '&:hover': {
-                            backgroundColor: '#43a047', // Darker green on hover
+                            backgroundColor: '#1565c0', // Darker blue on hover
                         },
                     }}
+                    onClick={handleExportParticipants}
                 >
                     Export Participants (CSV)
                 </Button>
                 <Button
                     variant="contained"
-                    color="secondary"
-                    onClick={handleExportParticipantsXlsx}
                     sx={{
-                        backgroundColor: '#ff9800',
+                        backgroundColor: '#43a047', // Green button color
+                        color: '#ffffff',
                         '&:hover': {
-                            backgroundColor: '#fb8c00', // Darker orange on hover
+                            backgroundColor: '#2e7d32', // Darker green on hover
                         },
                     }}
+                    onClick={handleExportParticipantsXlsx}
                 >
                     Export Participants (XLSX)
                 </Button>

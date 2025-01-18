@@ -53,6 +53,9 @@ export function AttendedEvents() {
                     color: '#1976d2', // Deep blue for the title
                     fontWeight: 'bold',
                     textAlign: 'center',
+                    borderBottom: '2px solid #1976d2', // Underline effect
+                    paddingBottom: 1,
+                    marginBottom: 3,
                 }}
             >
                 Attended Events
@@ -64,12 +67,14 @@ export function AttendedEvents() {
                             <Card
                                 sx={{
                                     backgroundColor: index % 2 === 0 ? '#e3f2fd' : '#fffde7', // Alternating light blue and yellow
-                                    boxShadow: 2,
+                                    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', // Subtle shadow
                                     '&:hover': {
-                                        boxShadow: 6, // Subtle hover effect
+                                        boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.15)', // Stronger hover effect
+                                        transform: 'translateY(-5px)', // Slight hover lift
                                     },
-                                    borderRadius: 2, // Rounded corners
+                                    borderRadius: 4, // Rounded corners
                                     transition: 'all 0.3s ease-in-out', // Smooth transition on hover
+                                    padding: 2, // Internal padding for better spacing
                                 }}
                             >
                                 <CardContent>
@@ -86,7 +91,8 @@ export function AttendedEvents() {
                                     <Typography
                                         variant="body2"
                                         sx={{
-                                            color: '#616161', // Neutral gray for description
+                                            color: '#424242', // Neutral gray for description
+                                            marginBottom: 1,
                                         }}
                                     >
                                         {event.description}
@@ -123,6 +129,7 @@ export function AttendedEvents() {
                         textAlign: 'center',
                         color: '#757575', // Neutral gray for "No events" message
                         marginTop: 5,
+                        fontStyle: 'italic',
                     }}
                 >
                     No attended events found
@@ -130,5 +137,4 @@ export function AttendedEvents() {
             )}
         </Box>
     );
-
 }
