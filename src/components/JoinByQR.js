@@ -75,7 +75,7 @@ export function JoinByQR() {
                 padding: 3,
                 maxWidth: 600,
                 margin: '0 auto',
-                backgroundColor: '#f3f4f6', // Light gray background
+                backgroundColor: '#ffffff', // Pure white background
                 minHeight: '100vh', // Full viewport height
                 display: 'flex',
                 flexDirection: 'column',
@@ -87,7 +87,7 @@ export function JoinByQR() {
                 gutterBottom
                 sx={{
                     textAlign: 'center',
-                    color: '#0d47a1', // Deep blue header color
+                    color: '#0d47a1', // Deep blue header
                     fontWeight: 'bold',
                 }}
             >
@@ -104,10 +104,10 @@ export function JoinByQR() {
                 <Card
                     sx={{
                         marginTop: 3,
-                        padding: 2,
+                        padding: 3,
                         borderRadius: 2, // Rounded corners
-                        boxShadow: 4, // Subtle shadow for card
-                        backgroundColor: '#ffffff', // White card background
+                        boxShadow: 4, // Subtle shadow
+                        backgroundColor: '#f7faff', // Light blue card background
                     }}
                 >
                     <CardContent>
@@ -116,7 +116,7 @@ export function JoinByQR() {
                             gutterBottom
                             sx={{
                                 fontWeight: 'bold',
-                                color: '#2e7d32', // Green for event name
+                                color: '#0d47a1', // Deep blue for event name
                             }}
                         >
                             {event.name}
@@ -124,21 +124,24 @@ export function JoinByQR() {
                         <Typography
                             variant="body1"
                             gutterBottom
-                            sx={{ marginBottom: 2, color: '#424242' }} // Subtle gray for description
+                            sx={{ marginBottom: 2, color: '#424242' }} // Neutral gray for description
                         >
                             {event.description}
                         </Typography>
                         <Typography
                             variant="body2"
-                            color="textSecondary"
-                            sx={{ marginBottom: 1 }}
+                            sx={{
+                                marginBottom: 1,
+                                color: '#757575', // Subtle gray for meta information
+                            }}
                         >
                             <strong>Start time:</strong> {new Date(event.start_time).toLocaleString()}
                         </Typography>
                         <Typography
                             variant="body2"
-                            color="textSecondary"
-                            gutterBottom
+                            sx={{
+                                color: '#757575', // Subtle gray for meta information
+                            }}
                         >
                             <strong>End time:</strong> {new Date(event.end_time).toLocaleString()}
                         </Typography>
@@ -148,30 +151,56 @@ export function JoinByQR() {
                                 display: 'flex',
                                 justifyContent: 'space-between',
                                 marginTop: 3,
-                                gap: 2, // Add space between buttons
-                                flexWrap: 'wrap', // Handle smaller screens
+                                gap: 2, // Space between buttons
+                                flexWrap: 'wrap', // Ensure responsive behavior
                             }}
                         >
                             <Button
                                 variant="contained"
-                                color="primary"
-                                sx={{ flex: 1, minWidth: '30%' }} // Flexible width for buttons
+                                sx={{
+                                    backgroundColor: '#0d47a1', // Deep blue button
+                                    '&:hover': {
+                                        backgroundColor: '#083b91', // Darker shade on hover
+                                    },
+                                    flex: 1,
+                                    minWidth: '30%',
+                                    textTransform: 'none', // No uppercase
+                                    fontWeight: 'bold',
+                                }}
                                 onClick={handleLogin}
                             >
                                 Log in
                             </Button>
                             <Button
                                 variant="contained"
-                                color="secondary"
-                                sx={{ flex: 1, minWidth: '30%' }}
+                                sx={{
+                                    backgroundColor: '#1976d2', // Light blue button
+                                    '&:hover': {
+                                        backgroundColor: '#135ba1', // Darker shade on hover
+                                    },
+                                    flex: 1,
+                                    minWidth: '30%',
+                                    textTransform: 'none',
+                                    fontWeight: 'bold',
+                                }}
                                 onClick={handleRegister}
                             >
                                 Register
                             </Button>
                             <Button
                                 variant="outlined"
-                                color="success"
-                                sx={{ flex: 1, minWidth: '30%' }}
+                                sx={{
+                                    borderColor: '#2e7d32', // Green border
+                                    color: '#2e7d32', // Green text
+                                    '&:hover': {
+                                        backgroundColor: '#e8f5e9', // Light green hover effect
+                                        borderColor: '#1b5e20', // Darker green border
+                                    },
+                                    flex: 1,
+                                    minWidth: '30%',
+                                    textTransform: 'none',
+                                    fontWeight: 'bold',
+                                }}
                                 onClick={() => setShowGuestInput(true)}
                             >
                                 Join as Guest
@@ -188,13 +217,21 @@ export function JoinByQR() {
                                     onChange={(e) => setGuestName(e.target.value)}
                                     sx={{
                                         marginBottom: 2,
-                                        backgroundColor: '#f9fbe7', // Light yellow input background
+                                        backgroundColor: '#f9f9f9', // Light gray for input field
+                                        borderRadius: 1,
                                     }}
                                 />
                                 <Button
                                     variant="contained"
-                                    color="success"
-                                    fullWidth
+                                    sx={{
+                                        backgroundColor: '#2e7d32', // Green button
+                                        '&:hover': {
+                                            backgroundColor: '#1b5e20', // Darker green on hover
+                                        },
+                                        fullWidth: true,
+                                        textTransform: 'none',
+                                        fontWeight: 'bold',
+                                    }}
                                     onClick={handleGuestJoin}
                                 >
                                     Confirm

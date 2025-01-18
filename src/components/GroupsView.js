@@ -43,8 +43,8 @@ export function GroupsView() {
         <Box
             sx={{
                 padding: 3,
-                backgroundColor: '#f3f4f6', // Light gray background
-                minHeight: '100vh', // Ensure the page spans the full viewport height
+                backgroundColor: '#ffffff', // Pure white background for a clean look
+                minHeight: '100vh', // Full viewport height
             }}
         >
             <Typography
@@ -52,7 +52,7 @@ export function GroupsView() {
                 gutterBottom
                 sx={{
                     textAlign: 'center',
-                    color: '#0d47a1', // Deep blue header color
+                    color: '#0d47a1', // Deep blue for the title
                     fontWeight: 'bold',
                 }}
             >
@@ -66,12 +66,14 @@ export function GroupsView() {
                                 onClick={() => handleGroupClick(group.id)}
                                 sx={{
                                     cursor: 'pointer',
-                                    backgroundColor: index % 2 === 0 ? '#e8f5e9' : '#fffde7', // Alternating colors (light green and yellow)
+                                    backgroundColor: index % 2 === 0 ? '#e3f2fd' : '#ffffff', // Alternating light blue and white
                                     '&:hover': {
-                                        boxShadow: 6, // Slightly stronger shadow on hover
+                                        boxShadow: 6, // Subtle shadow on hover
+                                        transform: 'scale(1.03)', // Slight zoom effect
                                     },
-                                    borderRadius: 2, // Rounded corners
-                                    padding: 2, // Add padding for better spacing
+                                    borderRadius: 2, // Rounded corners for a modern look
+                                    transition: 'all 0.3s ease-in-out', // Smooth hover effect
+                                    padding: 2, // Padding for internal spacing
                                 }}
                             >
                                 <CardContent>
@@ -80,15 +82,15 @@ export function GroupsView() {
                                         gutterBottom
                                         sx={{
                                             fontWeight: 'bold',
-                                            color: '#2e7d32', // Dark green for titles
+                                            color: '#0d47a1', // Deep blue for the title
                                         }}
                                     >
                                         {group.name}
                                     </Typography>
                                     <Typography
                                         variant="body2"
-                                        color="textSecondary"
                                         sx={{
+                                            color: '#757575', // Muted gray for the description
                                             fontSize: '0.9rem',
                                         }}
                                     >
@@ -104,7 +106,7 @@ export function GroupsView() {
                     variant="body1"
                     sx={{
                         textAlign: 'center',
-                        color: '#616161', // Muted gray for no groups found message
+                        color: '#9e9e9e', // Muted gray for the fallback message
                         marginTop: 4,
                     }}
                 >

@@ -43,14 +43,21 @@ export function Events() {
         <Box
             sx={{
                 padding: 3,
-                backgroundColor: '#f3f4f6', // Light gray background for the section
+                backgroundColor: '#f5f7fa', // Light blue background
                 minHeight: '100vh',
             }}
         >
             <Typography
                 variant="h4"
                 gutterBottom
-                sx={{ color: '#2e7d32', fontWeight: 'bold', textAlign: 'center' }} // Green heading
+                sx={{
+                    color: '#1976d2', // Blue heading
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    borderBottom: '2px solid #1976d2', // Blue underline for emphasis
+                    paddingBottom: 1,
+                    marginBottom: 3,
+                }}
             >
                 Events
             </Typography>
@@ -62,15 +69,15 @@ export function Events() {
                                 onClick={() => handleEventClick(event._id)}
                                 sx={{
                                     cursor: 'pointer',
-                                    backgroundColor:
-                                        index % 2 === 0 ? '#c8e6c9' : '#fff9c4', // Alternating green and yellow for card backgrounds
-                                    color: '#424242', // Text color
+                                    backgroundColor: '#ffffff', // White background
+                                    color: '#000000', // Black text
+                                    border: '1px solid #e0e0e0', // Subtle border
+                                    borderRadius: 4, // Rounded corners for the cards
+                                    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)', // Subtle shadow
                                     '&:hover': {
-                                        boxShadow: 6, // Increase shadow intensity on hover
-                                        backgroundColor:
-                                            index % 2 === 0 ? '#a5d6a7' : '#fff59d', // Slightly darker shade on hover
+                                        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)', // Stronger shadow on hover
+                                        backgroundColor: '#f0f0f0', // Slightly gray background on hover
                                     },
-                                    borderRadius: 2, // Rounded corners for the cards
                                     transition: 'all 0.3s ease-in-out', // Smooth transition effect
                                 }}
                             >
@@ -78,22 +85,40 @@ export function Events() {
                                     <Typography
                                         variant="h5"
                                         gutterBottom
-                                        sx={{ color: '#1b5e20', fontWeight: 'bold' }} // Dark green for title
+                                        sx={{
+                                            color: '#1976d2', // Blue for title
+                                            fontWeight: 'bold',
+                                        }}
                                     >
                                         {event.name}
                                     </Typography>
-                                    <Typography variant="body2" color="textSecondary">
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            color: '#555555', // Subtle gray for meta information
+                                            marginBottom: 1,
+                                        }}
+                                    >
                                         <strong>Start:</strong> {new Date(event.start_time).toLocaleString()}
                                     </Typography>
-                                    <Typography variant="body2" color="textSecondary">
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            color: '#555555',
+                                            marginBottom: 1,
+                                        }}
+                                    >
                                         <strong>End:</strong> {new Date(event.end_time).toLocaleString()}
                                     </Typography>
                                     <Typography
                                         variant="body1"
                                         sx={{
-                                            color: event.status === 'CLOSED' ? '#388e3c' : '#d32f2f', // Green for "Not started" and red for "In progress"
+                                            color: event.status === 'CLOSED' ? '#d32f2f' : '#388e3c', // Red for closed, green for in progress
+                                            backgroundColor: event.status === 'CLOSED' ? '#ffebee' : '#e8f5e9', // Light red/green background
                                             fontWeight: 'bold',
-                                            marginTop: 1,
+                                            padding: '4px 8px',
+                                            borderRadius: 2,
+                                            display: 'inline-block',
                                         }}
                                     >
                                         Status: {event.status === 'CLOSED' ? 'Not started' : 'In progress'}
@@ -108,8 +133,9 @@ export function Events() {
                     variant="body1"
                     sx={{
                         textAlign: 'center',
-                        color: '#757575',
+                        color: '#9e9e9e',
                         marginTop: 5,
+                        fontStyle: 'italic',
                     }}
                 >
                     No events found
@@ -117,6 +143,8 @@ export function Events() {
             )}
         </Box>
     );
+
+
 
 
 }

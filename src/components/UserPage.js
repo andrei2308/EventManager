@@ -61,10 +61,24 @@ function UserPage() {
         navigate(`/events/attended/${userData._id}`)
     }
     return (
-        <Box sx={{ padding: 3, backgroundColor: '#f3f4f6', minHeight: '100vh' }}>
+        <Box
+            sx={{
+                padding: 3,
+                backgroundColor: '#f3f4f6', // Light gray background
+                minHeight: '100vh', // Full viewport height
+            }}
+        >
             {/* Logout Button Positioned at the Top Right */}
             <Box display="flex" justifyContent="flex-end" mb={2}>
-                <Button variant="outlined" color="error" onClick={handleLogout}>
+                <Button
+                    variant="outlined"
+                    sx={{
+                        color: '#d32f2f', // Red text for logout
+                        borderColor: '#d32f2f', // Red border
+                        '&:hover': { backgroundColor: '#f8d7da', borderColor: '#c62828' }, // Light red hover effect
+                    }}
+                    onClick={handleLogout}
+                >
                     Logout
                 </Button>
             </Box>
@@ -75,14 +89,17 @@ function UserPage() {
                 sx={{
                     padding: 3,
                     marginBottom: 3,
-                    backgroundColor: '#ffffff',
+                    backgroundColor: '#ffffff', // Pure white background
                     borderRadius: 2,
                 }}
             >
                 <Typography
                     variant="h4"
                     gutterBottom
-                    sx={{ color: '#0d47a1', fontWeight: 'bold' }}
+                    sx={{
+                        color: '#0d47a1', // Deep blue for header
+                        fontWeight: 'bold',
+                    }}
                 >
                     Welcome, {userData.username}!
                 </Typography>
@@ -102,14 +119,17 @@ function UserPage() {
                         elevation={2}
                         sx={{
                             padding: 3,
-                            backgroundColor: '#e3f2fd', // Light blue
+                            backgroundColor: '#f7faff', // Very light blue background
                             borderRadius: 2,
                         }}
                     >
                         <Typography
                             variant="h5"
                             gutterBottom
-                            sx={{ color: '#0d47a1', fontWeight: 'bold' }}
+                            sx={{
+                                color: '#0d47a1', // Deep blue for header
+                                fontWeight: 'bold',
+                            }}
                         >
                             User Section
                         </Typography>
@@ -117,7 +137,7 @@ function UserPage() {
                             fullWidth
                             variant="contained"
                             sx={{
-                                backgroundColor: '#0d47a1',
+                                backgroundColor: '#0d47a1', // Deep blue button
                                 '&:hover': { backgroundColor: '#002171' },
                             }}
                             onClick={handleViewEvents}
@@ -128,7 +148,7 @@ function UserPage() {
                             fullWidth
                             variant="contained"
                             sx={{
-                                backgroundColor: '#1976d2',
+                                backgroundColor: '#1976d2', // Slightly lighter blue button
                                 marginTop: 1,
                                 '&:hover': { backgroundColor: '#115293' },
                             }}
@@ -140,9 +160,9 @@ function UserPage() {
                             fullWidth
                             variant="contained"
                             sx={{
-                                backgroundColor: '#64b5f6',
+                                backgroundColor: '#42a5f5', // Medium blue button
                                 marginTop: 1,
-                                '&:hover': { backgroundColor: '#42a5f5' },
+                                '&:hover': { backgroundColor: '#1e88e5' },
                             }}
                             onClick={handleViewAttendedEvents}
                         >
@@ -158,14 +178,17 @@ function UserPage() {
                             elevation={2}
                             sx={{
                                 padding: 3,
-                                backgroundColor: '#fffde7', // Light yellow
+                                backgroundColor: '#ffffff', // Pure white background
                                 borderRadius: 2,
                             }}
                         >
                             <Typography
                                 variant="h5"
                                 gutterBottom
-                                sx={{ color: '#f57f17', fontWeight: 'bold' }}
+                                sx={{
+                                    color: '#0d47a1', // Deep blue for header
+                                    fontWeight: 'bold',
+                                }}
                             >
                                 Administrator Section
                             </Typography>
@@ -173,8 +196,8 @@ function UserPage() {
                                 fullWidth
                                 variant="contained"
                                 sx={{
-                                    backgroundColor: '#f57f17',
-                                    '&:hover': { backgroundColor: '#e65100' },
+                                    backgroundColor: '#1565c0', // Medium blue
+                                    '&:hover': { backgroundColor: '#0d47a1' }, // Darker blue on hover
                                 }}
                                 onClick={handleCreateEvent}
                             >
@@ -184,9 +207,9 @@ function UserPage() {
                                 fullWidth
                                 variant="contained"
                                 sx={{
-                                    backgroundColor: '#ffb300',
+                                    backgroundColor: '#1e88e5', // Bright blue
                                     marginTop: 1,
-                                    '&:hover': { backgroundColor: '#ffa000' },
+                                    '&:hover': { backgroundColor: '#1565c0' },
                                 }}
                                 onClick={handleCreateGroup}
                             >
@@ -196,9 +219,9 @@ function UserPage() {
                                 fullWidth
                                 variant="contained"
                                 sx={{
-                                    backgroundColor: '#ffca28',
+                                    backgroundColor: '#64b5f6', // Lighter blue
                                     marginTop: 1,
-                                    '&:hover': { backgroundColor: '#ffb300' },
+                                    '&:hover': { backgroundColor: '#42a5f5' },
                                 }}
                                 onClick={handleViewMyEvents}
                             >
@@ -208,9 +231,9 @@ function UserPage() {
                                 fullWidth
                                 variant="contained"
                                 sx={{
-                                    backgroundColor: '#ffe082',
+                                    backgroundColor: '#bbdefb', // Very light blue
                                     marginTop: 1,
-                                    '&:hover': { backgroundColor: '#ffd54f' },
+                                    '&:hover': { backgroundColor: '#90caf9' },
                                 }}
                                 onClick={handleViewMyGroups}
                             >
@@ -222,7 +245,6 @@ function UserPage() {
             </Grid>
         </Box>
     );
-
 }
 
 export default UserPage;

@@ -70,40 +70,105 @@ export function AdminEventsDetails() {
         );
     }
     return (
-        <Box sx={{ padding: 3 }}>
-            <Typography variant="h4" gutterBottom>
+        <Box
+            sx={{
+                padding: 3,
+                backgroundColor: '#f5f7fa', // Light blue background
+                minHeight: '100vh',
+            }}
+        >
+            <Typography
+                variant="h4"
+                gutterBottom
+                sx={{
+                    color: '#1976d2', // Blue heading
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    borderBottom: '2px solid #1976d2', // Blue underline for emphasis
+                    paddingBottom: 1,
+                    marginBottom: 3,
+                }}
+            >
                 Event Details
             </Typography>
             {event && (
-                <Card sx={{ maxWidth: 600, margin: "0 auto" }}>
+                <Card
+                    sx={{
+                        maxWidth: 600,
+                        margin: '0 auto',
+                        padding: 3,
+                        backgroundColor: '#ffffff', // White card background
+                        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)', // Subtle shadow
+                        borderRadius: 4, // Rounded corners
+                    }}
+                >
                     <CardContent>
-                        <Typography variant="h5" gutterBottom>
+                        <Typography
+                            variant="h5"
+                            gutterBottom
+                            sx={{
+                                color: '#1976d2', // Blue title
+                                fontWeight: 'bold',
+                                textAlign: 'center',
+                                marginBottom: 2,
+                            }}
+                        >
                             {event.name}
                         </Typography>
-                        <Typography variant="body1" gutterBottom>
+                        <Typography
+                            variant="body1"
+                            gutterBottom
+                            sx={{ color: '#424242', marginBottom: 1 }}
+                        >
                             <strong>Description:</strong> {event.description}
                         </Typography>
-                        <Typography variant="body1" gutterBottom>
+                        <Typography
+                            variant="body1"
+                            gutterBottom
+                            sx={{ color: '#424242', marginBottom: 1 }}
+                        >
                             <strong>Start Time:</strong> {new Date(event.start_time).toLocaleString()}
                         </Typography>
-                        <Typography variant="body1" gutterBottom>
+                        <Typography
+                            variant="body1"
+                            gutterBottom
+                            sx={{ color: '#424242', marginBottom: 1 }}
+                        >
                             <strong>End Time:</strong> {new Date(event.end_time).toLocaleString()}
                         </Typography>
-                        <Typography variant="body1" gutterBottom>
+                        <Typography
+                            variant="body1"
+                            gutterBottom
+                            sx={{ color: '#424242', marginBottom: 1 }}
+                        >
                             <strong>Access Code:</strong> {event.access_code}
                         </Typography>
-                        <Typography variant="body1" gutterBottom>
-                            <strong>Status:</strong>{" "}
-                            <span
-                                style={{
-                                    color: event.status === "CLOSED" ? "red" : "green",
-                                    fontWeight: "bold",
-                                }}
-                            >
-                                {event.status}
-                            </span>
+                        <Typography
+                            variant="body1"
+                            gutterBottom
+                            sx={{
+                                fontWeight: 'bold',
+                                color: event.status === 'CLOSED' ? '#d32f2f' : '#388e3c', // Red for CLOSED, green for OPEN
+                                backgroundColor:
+                                    event.status === 'CLOSED' ? '#ffebee' : '#e8f5e9', // Light red/green background
+                                padding: '4px 8px',
+                                borderRadius: 2,
+                                display: 'inline-block',
+                                textAlign: 'center',
+                            }}
+                        >
+                            Status: {event.status}
                         </Typography>
-                        <Box sx={{ textAlign: "center", marginTop: 3 }}>
+                        <Box
+                            sx={{
+                                textAlign: 'center',
+                                marginTop: 3,
+                                padding: 2,
+                                border: '1px solid #e0e0e0',
+                                borderRadius: 4,
+                                backgroundColor: '#f9f9f9',
+                            }}
+                        >
                             <QRCodeCanvas
                                 value={`https://andrei2308.github.io/EventManager?eventId=${event._id}&action=join`}
                                 size={200}
@@ -118,12 +183,27 @@ export function AdminEventsDetails() {
                         >
                             <Button
                                 variant="contained"
-                                color="secondary"
+                                sx={{
+                                    backgroundColor: '#1976d2',
+                                    color: '#ffffff',
+                                    '&:hover': { backgroundColor: '#1565c0' },
+                                }}
                                 onClick={handleClickSeeParticipants}
                             >
                                 See Participants
                             </Button>
-                            <Button variant="outlined" color="error" onClick={handleDeleteEvent}>
+                            <Button
+                                variant="outlined"
+                                sx={{
+                                    color: '#d32f2f',
+                                    borderColor: '#d32f2f',
+                                    '&:hover': {
+                                        backgroundColor: '#ffebee',
+                                        borderColor: '#d32f2f',
+                                    },
+                                }}
+                                onClick={handleDeleteEvent}
+                            >
                                 Delete Event
                             </Button>
                         </Stack>

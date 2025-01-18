@@ -120,15 +120,15 @@ export function EventParticipants() {
         <Box
             sx={{
                 padding: 3,
-                backgroundColor: '#f5f5f5', // Light gray background for contrast
-                minHeight: '100vh',
+                backgroundColor: '#f7faff', // Light blue background
+                minHeight: '100vh', // Full viewport height
             }}
         >
             <Typography
                 variant="h4"
                 gutterBottom
                 sx={{
-                    color: '#1976d2', // Deep blue title
+                    color: '#1976d2', // Deep blue for the title
                     fontWeight: 'bold',
                     textAlign: 'center',
                 }}
@@ -142,8 +142,9 @@ export function EventParticipants() {
                         variant="h5"
                         gutterBottom
                         sx={{
-                            color: '#1b5e20', // Green for "Registered Participants"
+                            color: '#1976d2', // Deep blue for "Registered Participants"
                             fontWeight: 'bold',
+                            textAlign: 'center',
                             marginTop: 3,
                         }}
                     >
@@ -154,7 +155,7 @@ export function EventParticipants() {
                             <Grid item xs={12} sm={6} md={4} key={participant._id}>
                                 <Card
                                     sx={{
-                                        backgroundColor: index % 2 === 0 ? '#e3f2fd' : '#fffde7', // Alternating blue and yellow
+                                        backgroundColor: '#ffffff', // White background for consistency
                                         boxShadow: 2,
                                         '&:hover': {
                                             boxShadow: 6, // Subtle hover effect
@@ -166,11 +167,20 @@ export function EventParticipants() {
                                     <CardContent>
                                         <Typography
                                             variant="h6"
-                                            sx={{ color: '#0d47a1', fontWeight: 'bold' }} // Dark blue for participant name
+                                            sx={{
+                                                color: '#0d47a1', // Dark blue for participant name
+                                                fontWeight: 'bold',
+                                            }}
                                         >
                                             {participant.username}
                                         </Typography>
-                                        <Typography variant="body2" color="textSecondary">
+                                        <Typography
+                                            variant="body2"
+                                            sx={{
+                                                color: '#616161', // Neutral gray for timestamp
+                                                marginTop: 1,
+                                            }}
+                                        >
                                             Joined at: {new Date(participant.joinedAt).toLocaleString()}
                                         </Typography>
                                     </CardContent>
@@ -183,8 +193,9 @@ export function EventParticipants() {
                         variant="h5"
                         gutterBottom
                         sx={{
-                            color: '#f57f17', // Amber for "Guest Participants"
+                            color: '#1976d2', // Deep blue for "Guest Participants"
                             fontWeight: 'bold',
+                            textAlign: 'center',
                             marginTop: 3,
                         }}
                     >
@@ -195,7 +206,7 @@ export function EventParticipants() {
                             <Grid item xs={12} sm={6} md={4} key={guest.name}>
                                 <Card
                                     sx={{
-                                        backgroundColor: index % 2 === 0 ? '#fffde7' : '#e3f2fd', // Alternating yellow and blue
+                                        backgroundColor: '#ffffff', // White background for consistency
                                         boxShadow: 2,
                                         '&:hover': {
                                             boxShadow: 6, // Subtle hover effect
@@ -207,11 +218,20 @@ export function EventParticipants() {
                                     <CardContent>
                                         <Typography
                                             variant="h6"
-                                            sx={{ color: '#e65100', fontWeight: 'bold' }} // Orange for guest name
+                                            sx={{
+                                                color: '#0d47a1', // Dark blue for guest name
+                                                fontWeight: 'bold',
+                                            }}
                                         >
                                             Guest: {guest.name}
                                         </Typography>
-                                        <Typography variant="body2" color="textSecondary">
+                                        <Typography
+                                            variant="body2"
+                                            sx={{
+                                                color: '#616161', // Neutral gray for timestamp
+                                                marginTop: 1,
+                                            }}
+                                        >
                                             Joined at: {new Date(guest.joinedAt).toLocaleString()}
                                         </Typography>
                                     </CardContent>
@@ -220,16 +240,42 @@ export function EventParticipants() {
                         ))}
                     </Grid>
 
-                    <Box sx={{ marginTop: 4, textAlign: 'center' }}>
+                    <Box
+                        sx={{
+                            marginTop: 4,
+                            display: 'flex',
+                            justifyContent: 'center',
+                            gap: 2, // Add spacing between buttons
+                        }}
+                    >
                         <Button
                             variant="contained"
-                            color="primary"
-                            sx={{ marginRight: 2 }}
+                            sx={{
+                                backgroundColor: '#1976d2',
+                                color: '#ffffff', // White text
+                                '&:hover': {
+                                    backgroundColor: '#115293', // Darker blue on hover
+                                },
+                                padding: 1,
+                                fontWeight: 'bold',
+                            }}
                             onClick={handleExportParticipants}
                         >
                             Export Participants (CSV)
                         </Button>
-                        <Button variant="contained" color="secondary" onClick={handleExportParticipantsXlsx}>
+                        <Button
+                            variant="contained"
+                            sx={{
+                                backgroundColor: '#1976d2',
+                                color: '#ffffff', // White text
+                                '&:hover': {
+                                    backgroundColor: '#115293', // Darker blue on hover
+                                },
+                                padding: 1,
+                                fontWeight: 'bold',
+                            }}
+                            onClick={handleExportParticipantsXlsx}
+                        >
                             Export Participants (XLSX)
                         </Button>
                     </Box>

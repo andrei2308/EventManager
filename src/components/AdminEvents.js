@@ -41,7 +41,7 @@ export function AdminEvents() {
         <Box
             sx={{
                 padding: 3,
-                backgroundColor: '#f3f4f6', // Light gray background for contrast
+                backgroundColor: '#f5f7fa', // Light blue background for contrast
                 minHeight: '100vh',
             }}
         >
@@ -49,9 +49,12 @@ export function AdminEvents() {
                 variant="h4"
                 gutterBottom
                 sx={{
-                    color: '#2e7d32', // Green heading color
+                    color: '#1565c0', // Blue heading color
                     fontWeight: 'bold',
                     textAlign: 'center',
+                    borderBottom: '2px solid #1565c0', // Blue underline for emphasis
+                    paddingBottom: 1,
+                    marginBottom: 3,
                 }}
             >
                 Events
@@ -64,12 +67,13 @@ export function AdminEvents() {
                                 onClick={() => navigate(`/events/details/admin/${event._id}`)}
                                 sx={{
                                     cursor: 'pointer',
-                                    backgroundColor: index % 2 === 0 ? '#c8e6c9' : '#fff9c4', // Alternating green and yellow
+                                    backgroundColor: '#ffffff', // White card background
+                                    border: index % 2 === 0 ? '2px solid #90caf9' : '2px solid #bbdefb', // Alternating light blue borders
                                     '&:hover': {
-                                        boxShadow: 6, // Shadow effect on hover
-                                        backgroundColor: index % 2 === 0 ? '#a5d6a7' : '#fff59d', // Slightly darker shade on hover
+                                        boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.2)', // Shadow effect on hover
+                                        borderColor: index % 2 === 0 ? '#42a5f5' : '#64b5f6', // Darker border on hover
                                     },
-                                    borderRadius: 2, // Rounded corners
+                                    borderRadius: 4, // Rounded corners
                                     transition: 'all 0.3s ease-in-out', // Smooth hover transition
                                 }}
                             >
@@ -78,23 +82,39 @@ export function AdminEvents() {
                                         variant="h5"
                                         gutterBottom
                                         sx={{
-                                            color: '#1b5e20', // Dark green for title
+                                            color: '#0d47a1', // Dark blue for title
                                             fontWeight: 'bold',
                                         }}
                                     >
                                         {event.name}
                                     </Typography>
-                                    <Typography variant="body2" color="textSecondary">
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            color: '#424242', // Subtle gray for meta information
+                                            marginBottom: 1,
+                                        }}
+                                    >
                                         <strong>Start:</strong> {new Date(event.start_time).toLocaleString()}
                                     </Typography>
-                                    <Typography variant="body2" color="textSecondary">
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            color: '#424242', // Subtle gray for meta information
+                                            marginBottom: 1,
+                                        }}
+                                    >
                                         <strong>End:</strong> {new Date(event.end_time).toLocaleString()}
                                     </Typography>
                                     <Typography
                                         variant="body1"
                                         sx={{
                                             color: event.status === 'CLOSED' ? '#388e3c' : '#d32f2f', // Green for "Not started", red for "In progress"
+                                            backgroundColor: event.status === 'CLOSED' ? '#e8f5e9' : '#ffebee', // Light green/red background
                                             fontWeight: 'bold',
+                                            padding: '4px 8px',
+                                            borderRadius: 2,
+                                            display: 'inline-block',
                                             marginTop: 1,
                                         }}
                                     >
@@ -110,7 +130,7 @@ export function AdminEvents() {
                     variant="body1"
                     sx={{
                         textAlign: 'center',
-                        color: '#757575',
+                        color: '#757575', // Subtle gray for "No events found"
                         marginTop: 5,
                     }}
                 >
@@ -119,5 +139,4 @@ export function AdminEvents() {
             )}
         </Box>
     );
-
 }
