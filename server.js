@@ -1,24 +1,24 @@
-/** 
+/**
  * @file server.js
  * @description This file contains the server setup and API endpoints for the Event Manager application.
  * It uses Express for routing, Mongoose for MongoDB connection, and various middlewares for security and parsing.
  * It also includes JWT authentication and Swagger documentation setup.
  */
-require('dotenv').config();
-const mongodb = require('mongoose');
-const express = require('express');
-const cors = require('cors');
+require("dotenv").config();
+const mongodb = require("mongoose");
+const express = require("express");
+const cors = require("cors");
 const bodyparser = require("body-parser");
-const helmet = require('helmet');
-const swaggerUi = require('swagger-ui-express');
-const path = require('path');
-const fs = require('fs');
-const User = require('./src/Schemas/UserSchema.js');
-const Event = require('./src/Schemas/EventSchema.js');
-const EventGroup = require('./src/Schemas/EventGroupSchema.js');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-require('./src/Jobs/cronJobs.js');
+const helmet = require("helmet");
+const swaggerUi = require("swagger-ui-express");
+const path = require("path");
+const fs = require("fs");
+const User = require("./src/Schemas/UserSchema.js");
+const Event = require("./src/Schemas/EventSchema.js");
+const EventGroup = require("./src/Schemas/EventGroupSchema.js");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+require("./src/Jobs/cronJobs.js");
 /**
  * @constant {Object} app - Express application instance.
  */
@@ -92,8 +92,8 @@ function authenticateToken(req, res, next) {
 /**
  * Swagger UI setup.
  */
-const openApiSpecPath = path.join(__dirname, 'openapi.yaml');
-const openApiSpec = fs.readFileSync(openApiSpecPath, 'utf8');
+const openApiSpecPath = path.join(__dirname, "openapi.yaml");
+const openApiSpec = fs.readFileSync(openApiSpecPath, "utf8");
 
 // Serve Swagger UI with YAML spec
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(null, {
@@ -195,7 +195,6 @@ app.get('/events', authenticateToken, (req, res) => {
 
     });
 });
-
 
 /**
  * Create event endpoint.
