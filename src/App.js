@@ -40,7 +40,6 @@ function App() {
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     const eventId = queryParams.get("eventId");
@@ -92,12 +91,12 @@ function App() {
         } catch (joinError) {
           setMessage(
             "Failed to join event: " +
-              (joinError.response?.data.message || joinError.message),
+            (joinError.response?.data.message || joinError.message),
           );
           alert(
             "Failed to join event: " +
-              (joinError.response?.data.message || joinError.message) +
-              ", redirecting to user dashboard",
+            (joinError.response?.data.message || joinError.message) +
+            ", redirecting to user dashboard",
           );
           localStorage.removeItem("eventId");
           navigate(`/user`);
@@ -129,7 +128,7 @@ function App() {
     } catch (error) {
       setMessage(
         "Registration failed. " +
-          (error.response?.data.message || error.message),
+        (error.response?.data.message || error.message),
       );
     } finally {
       setIsLoading(false);

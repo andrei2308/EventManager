@@ -10,14 +10,11 @@ import {
   CardContent,
   Button,
   CircularProgress,
-  Grid,
   Stack,
 } from "@mui/material";
 export function AdminEventsDetails() {
   const [event, setEvent] = useState(null);
-  const [events, setEvents] = useState([]);
   const [error, setError] = useState("");
-  const [qrCode, setQrCode] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const redirect = useNavigate();
   const { eventId } = useParams();
@@ -40,7 +37,7 @@ export function AdminEventsDetails() {
       .catch((err) => {
         setError(
           "Failed to fetch events: " +
-            (err.response?.data.message || err.message),
+          (err.response?.data.message || err.message),
         );
         setIsLoading(false);
       });
@@ -69,7 +66,7 @@ export function AdminEventsDetails() {
       .catch((err) => {
         setError(
           "Failed to delete event: " +
-            (err.response?.data.message || err.message),
+          (err.response?.data.message || err.message),
         );
       });
   };
