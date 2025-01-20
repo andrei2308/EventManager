@@ -2,7 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import axiosInstance from "../axiosConfiguration";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { QRCodeCanvas } from "qrcode.react";
 import {
   Box,
@@ -19,8 +19,9 @@ export function EventsDetails() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const redirect = useNavigate();
+  const location = useLocation();
   const userID = JSON.parse(localStorage.getItem("userID"));
-
+  const { role } = location.state || {};
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -28,6 +29,7 @@ export function EventsDetails() {
       setIsLoading(false);
       return;
     }
+
     axiosInstance
       .get(`https://eventmanager-1-l2dr.onrender.com/events/${eventId}`)
       .then((response) => {
@@ -37,7 +39,7 @@ export function EventsDetails() {
       .catch((err) => {
         setError(
           "Failed to fetch event details: " +
-            (err.response?.data.message || err.message),
+          (err.response?.data.message || err.message),
         );
         setIsLoading(false);
       });
@@ -87,7 +89,7 @@ export function EventsDetails() {
     <Box
       sx={{
         padding: 3,
-        backgroundColor: "#f3f4f6", // Light gray background for better contrast
+        backgroundColor: "#f3f4f6",
         minHeight: "100vh",
       }}
     >
@@ -111,8 +113,8 @@ export function EventsDetails() {
             margin: "0 auto",
             padding: 3,
             boxShadow: 6,
-            backgroundColor: "#ffffff", // White card background
-            borderRadius: 2, // Rounded corners
+            backgroundColor: "#ffffff",
+            borderRadius: 2,
           }}
         >
           <CardContent>
@@ -121,64 +123,26 @@ export function EventsDetails() {
               gutterBottom
               sx={{
                 textAlign: "center",
-                color: "#0d47a1", // Deep blue for the header
+                color: "#0d47a1",
                 fontWeight: "bold",
               }}
             >
               Event Details
             </Typography>
-            <Typography
-              variant="body1"
-              gutterBottom
-              sx={{
-                fontSize: "1rem",
-                marginBottom: 2,
-              }}
-            >
+            <Typography variant="body1" gutterBottom sx={{ fontSize: "1rem", marginBottom: 2 }}>
               <strong>Name:</strong> {event.name}
             </Typography>
-            <Typography
-              variant="body1"
-              gutterBottom
-              sx={{
-                fontSize: "1rem",
-                marginBottom: 2,
-              }}
-            >
+            <Typography variant="body1" gutterBottom sx={{ fontSize: "1rem", marginBottom: 2 }}>
               <strong>Description:</strong> {event.description}
             </Typography>
-            <Typography
-              variant="body1"
-              gutterBottom
-              sx={{
-                fontSize: "1rem",
-                marginBottom: 2,
-              }}
-            >
-              <strong>Start Time:</strong>{" "}
-              {new Date(event.start_time).toLocaleString()}
+            <Typography variant="body1" gutterBottom sx={{ fontSize: "1rem", marginBottom: 2 }}>
+              <strong>Start Time:</strong> {new Date(event.start_time).toLocaleString()}
             </Typography>
-            <Typography
-              variant="body1"
-              gutterBottom
-              sx={{
-                fontSize: "1rem",
-                marginBottom: 2,
-              }}
-            >
-              <strong>End Time:</strong>{" "}
-              {new Date(event.end_time).toLocaleString()}
+            <Typography variant="body1" gutterBottom sx={{ fontSize: "1rem", marginBottom: 2 }}>
+              <strong>End Time:</strong> {new Date(event.end_time).toLocaleString()}
             </Typography>
-            <Typography
-              variant="body1"
-              gutterBottom
-              sx={{
-                fontSize: "1rem",
-                marginBottom: 2,
-              }}
-            >
-              <strong>Access Code:</strong>{" "}
-              <span style={{ color: "#757575" }}>Hidden</span>
+            <Typography variant="body1" gutterBottom sx={{ fontSize: "1rem", marginBottom: 2 }}>
+              <strong>Access Code:</strong> <span style={{ color: "#757575" }}>Hidden</span>
             </Typography>
             <Typography
               variant="body1"
@@ -186,34 +150,34 @@ export function EventsDetails() {
               sx={{
                 fontSize: "1rem",
                 fontWeight: "bold",
-                color: event.status === "OPEN" ? "#d32f2f" : "#388e3c", // Red for CLOSED, Green otherwise
+                color: event.status === "OPEN" ? "#d32f2f" : "#388e3c",
               }}
             >
-              <strong>Status:</strong>{" "}
-              {event.status === "CLOSED" ? "Not started" : "In progress"}
+              <strong>Status:</strong> {event.status === "CLOSED" ? "Not started" : "In progress"}
             </Typography>
 
-            <Box
-              sx={{
-                marginTop: 3,
-                display: "flex",
-                flexDirection: "column",
-                gap: 2,
-              }}
-            >
-              {event.status === "CLOSED" && (
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 2,
-                  }}
-                >
+            {/* If the user is guest we display event joined sucessfully */}
+            {role === "guest" ? (
+
+              <Typography
+                variant="h6"
+                sx={{
+                  textAlign: "center",
+                  color: "#388e3c",
+                  fontWeight: "bold",
+                  marginTop: 3,
+                }}
+              >
+                Event joined successfully!
+              </Typography>
+            ) : (
+              event.status === "CLOSED" && (
+                <Box sx={{ marginTop: 3, display: "flex", flexDirection: "column", gap: 2 }}>
                   <Typography
                     variant="h5"
                     gutterBottom
                     sx={{
-                      color: "#0d47a1", // Dark blue for title
+                      color: "#0d47a1",
                       fontWeight: "bold",
                       textAlign: "center",
                     }}
@@ -227,11 +191,9 @@ export function EventsDetails() {
                     value={enteredCode}
                     onChange={(e) => setEnteredCode(e.target.value)}
                     error={!!error && error.includes("Invalid access code")}
-                    helperText={
-                      error.includes("Invalid access code") ? error : ""
-                    }
+                    helperText={error.includes("Invalid access code") ? error : ""}
                     sx={{
-                      backgroundColor: "#f9f9f9", // Light gray text field background
+                      backgroundColor: "#f9f9f9",
                       borderRadius: 1,
                     }}
                   />
@@ -246,15 +208,15 @@ export function EventsDetails() {
                       textTransform: "none",
                       backgroundColor: "#0d47a1",
                       "&:hover": {
-                        backgroundColor: "#0b3c8b", // Darker shade on hover
+                        backgroundColor: "#0b3c8b",
                       },
                     }}
                   >
                     Join Event
                   </Button>
                 </Box>
-              )}
-            </Box>
+              )
+            )}
           </CardContent>
         </Card>
       )}

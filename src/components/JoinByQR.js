@@ -32,7 +32,7 @@ export function JoinByQR() {
       .catch((err) => {
         setError(
           "Failed to fetch event details: " +
-            (err.response?.data.message || err.message),
+          (err.response?.data.message || err.message),
         );
         setIsLoading(false);
       });
@@ -61,12 +61,12 @@ export function JoinByQR() {
       )
       .then(() => {
         alert("Successfully joined the event as a guest!");
-        redirect(`/EventManager`);
+        redirect(`/events/details/${eventId}`, { state: { role: "guest" } });
       })
       .catch((err) => {
         setError(
           "Failed to join as guest: " +
-            (err.response?.data.message || err.message),
+          (err.response?.data.message || err.message),
         );
       });
   };
