@@ -31,7 +31,7 @@ export function AttendedEvents() {
       .catch((err) => {
         setError(
           "Failed to fetch events: " +
-            (err.response?.data.message || err.message),
+          (err.response?.data.message || err.message),
         );
         setIsLoading(false);
       });
@@ -44,7 +44,7 @@ export function AttendedEvents() {
     );
   }
   const handleViewEvent = (eventId) => {
-    navigate(`/events/details/${eventId}`);
+    navigate(`/events/details/${eventId}`, { state: { state: "attended" } });
   };
   if (isLoading) {
     return (
@@ -86,7 +86,7 @@ export function AttendedEvents() {
         <Grid container spacing={3}>
           {events.map((event, index) => (
             <Grid item xs={12} sm={6} md={4} key={event._id}>
-              <Card
+              <Card onClick={() => handleViewEvent(event._id)}
                 sx={{
                   backgroundColor: index % 2 === 0 ? "#e3f2fd" : "#fffde7", // Alternating light blue and yellow
                   boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Subtle shadow

@@ -22,6 +22,7 @@ export function EventsDetails() {
   const location = useLocation();
   const userID = JSON.parse(localStorage.getItem("userID"));
   const { role } = location.state || {};
+  const { state } = location.state || {};
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -157,7 +158,7 @@ export function EventsDetails() {
             </Typography>
 
             {/* If the user is guest we display event joined sucessfully */}
-            {role === "guest" ? (
+            {role === "guest" || state === "attended" ? (
 
               <Typography
                 variant="h6"
@@ -168,7 +169,7 @@ export function EventsDetails() {
                   marginTop: 3,
                 }}
               >
-                Event joined successfully!
+                Event joined at {role === "guest" ? new Date().toLocaleString() : new Date(event.participants.find((p) => p.userId === userID).joinedAt).toLocaleString()}
               </Typography>
             ) : (
               event.status === "CLOSED" && (
