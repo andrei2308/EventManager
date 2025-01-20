@@ -31,7 +31,7 @@ export function CreateGroup() {
         groupData,
       );
 
-      setMessage(`Event created successfully: ${response.data.message}`);
+      setMessage(`Group of events created successfully !`);
     } catch (err) {
       setMessage(
         `Error creating event: ${err.response?.data.message || err.message}`,

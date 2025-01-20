@@ -11,7 +11,6 @@ import {
   CircularProgress,
 } from "@mui/material";
 export function AdminEvents() {
-  const [event, setEvent] = useState(null);
   const [events, setEvents] = useState([]);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -33,7 +32,7 @@ export function AdminEvents() {
       .catch((err) => {
         setError(
           "Failed to fetch events: " +
-            (err.response?.data.message || err.message),
+          (err.response?.data.message || err.message),
         );
         setIsLoading(false);
       });

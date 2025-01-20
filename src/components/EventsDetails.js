@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import axiosInstance from "../axiosConfiguration";
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { QRCodeCanvas } from "qrcode.react";
 import {
   Box,
   Typography,
@@ -63,7 +62,7 @@ export function EventsDetails() {
         await axiosInstance.post(
           `https://eventmanager-1-l2dr.onrender.com/events/${eventId}/join`,
         );
-        redirect("/events");
+        redirect("/user");
       } catch (err) {
         console.error("Error joining event:", err);
         setError("Failed to join the event.");

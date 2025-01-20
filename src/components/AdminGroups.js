@@ -13,7 +13,6 @@ import {
   CircularProgress,
 } from "@mui/material";
 export function AdminGroups() {
-  const [group, setGroup] = useState(null);
   const [groups, setGroups] = useState([]);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);

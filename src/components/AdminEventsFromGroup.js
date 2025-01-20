@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../axiosConfiguration";
-import { replace, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import {
   Grid,
@@ -11,7 +11,6 @@ import {
   CircularProgress,
 } from "@mui/material";
 export function AdminEventsFromGroup() {
-  const [event, setEvent] = useState(null);
   const [events, setEvents] = useState([]);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);

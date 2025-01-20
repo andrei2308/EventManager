@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../axiosConfiguration";
-import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import {
   Box,
@@ -16,7 +15,6 @@ export function EventParticipants() {
   const [error, setError] = useState("");
   const [guests, setGuests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
   const { eventId } = useParams();
   const userId = JSON.parse(localStorage.getItem("userID"));
   useEffect(() => {

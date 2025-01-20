@@ -55,7 +55,7 @@ export function EventsCreate() {
         eventData,
       );
       setEventId(response.data.eventId);
-      setMessage(`Event created successfully: ${response.data.message}`);
+      setMessage(`Event created successfully !`);
     } catch (err) {
       setMessage(
         `Error creating event: ${err.response?.data.message || err.message}`,
