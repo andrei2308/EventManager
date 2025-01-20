@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../axiosConfiguration";
-import { useNavigate } from "react-router-dom";
 import {
   TextField,
   Button,
@@ -8,7 +7,6 @@ import {
   Box,
   Typography,
   Paper,
-  CircularProgress,
 } from "@mui/material";
 export function CreateGroup() {
   const [name, setName] = useState("");

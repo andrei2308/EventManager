@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axiosInstance from "../axiosConfiguration";
 import { QRCodeCanvas } from "qrcode.react"; // Correctly import QRCodeCanvas
 import { TextField, Button, Grid, Typography, Box, Paper } from "@mui/material";
